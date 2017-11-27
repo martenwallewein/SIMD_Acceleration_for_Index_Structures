@@ -1,0 +1,68 @@
+Ideas:
+- Compress keys to better fill up SIMD registers to increase parallelism and to better pass through cache line
+- Adapt trees to hardware criteria (cache line, available registers, ...)
+- Key count per node vs tree height
+- Use GPU for index Operations
+  -> Problem: Memory bandwidth limitation to GPU
+- Data only in leaf nodes to minimize cache misses
+- lossy compression of keys/inner nodes, reduced error rate resulting in better performance
+
+Similarities:
+- Use SIMD instructions for tree traversal, adapt nodes to use for SIMD
+- Use other SIMD operators to avoid mispredictions in condition branching
+
+Differences
+- Read only trees vs read/write trees
+- Hardware-conscious adaption of trees vs hw independent
+- Node sizes: Match one cache block or greater
+
+Prelimitations:
+- Not only calculation takes effort of performance but also wrong predictions
+in condition branching
+- Cache misses and TLB misses should be avoided
+- Often index structures fit into main memory so the old "disk-memory" idea is deprecated
+
+Performance problems of modern main-memory databases
+- Main memory get cheaper
+  -> Index structures often fit into main memory
+  -> Bottleneck moves from disk <-> main memory to main memory <-> CPU cache
+  -> Importance of cache misses increased
+  -> CPU calculations are also becoming more important regarding the performance
+- Index structures grow very fast together with the size of the data
+  -> Compression is useful to minimize the transferred data between CPU and main memory
+
+Compare criteria:
+- Compression
+- SIMD vectorization (not exactly SIMD, but parallelism vectorization):
+  -> horizontal: compare one input key with several data keys
+  -> vertical: process a different input key per vector lane. All vector lanes
+  process different keys from the input and access different hash table locations.
+- Read/write tree after adaption
+- performance gain against base tree, performance against each other
+- possible/adapted Operations
+
+Raytracing:
+- Visibility of a point in a 3 dimensional room
+
+ART:
+- Radix-tree vs suffix-tree:
+  -> Suffix tree has on each edge a single letter, radix tree allows to have
+  a variable length (compression of the tree)
+
+Sections:
+- Abstract
+  -> Which ideas of adapting index structures and what are benefits
+- Introduction
+  -> Why it's necessary to adapt the "old" tree structures?
+  -> What are problems that the new tree structures should solve?
+- Prelimitations
+  -> Reference to B/B+/T trees and to SIMD
+  -> Horizontal and vertical parallelism
+- Adapted trees
+  -> FAST
+  -> VAST
+  -> K-ary trees
+  -> pkT-tree, pkB-tree
+- Comparision between the trees
+- Related work - What to place here??
+- References

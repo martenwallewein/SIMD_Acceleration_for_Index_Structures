@@ -1,0 +1,116 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{SIMD Acceleration for Index Structures\\
+}
+
+\author{\IEEEauthorblockN{Marten Wallewein-Eising}
+\IEEEauthorblockA{\textit{Otto-von-Guericke University} \\
+Magdeburg, Germany \\
+marten.wallewein-eising@st.ovgu.de}
+}
+
+\maketitle
+
+\begin{abstract}
+\begin{itemize}
+	\item summary: 
+	\subitem Give short an overview of SIMD and modern index structures
+	\subitem Explain what are the problems of the ``old" index structures made for disk-based database systems
+	\subitem Explain which approaches were made to adapt index structures to modern systems and what they have in common and what are differences
+	\item Why is this work important: 
+	\subitem Give a state of current development of the index structures
+	\subitem Collect common approaches to adapt other index structures TODO: ReThink
+	\item K-ary search trees, FAST, VAST and ART compared
+	\item Contribution: What are important approaches used by different implementations to adapt index structures to modern systems
+\end{itemize}
+\end{abstract}
+
+\begin{IEEEkeywords}
+SIMD, index 
+\end{IEEEkeywords}
+
+\section{Introduction}
+\begin{itemize}
+	\item General Problem: Index structures are not applicable to modern systems
+	\subitem IO-Bottleneck moves from disk-ram  to ram-cache. CPU cycles of pure calculation got more important, cache line has to be used in an optimized way
+	\subitem Index structures grow very high because of the massive amount of data collected in modern databases
+	\subitem Branch-mispredictions cost many CPU cycles and should therefore be avoided
+	\item objectives/contributions: Comparision of current work and highlighting of important approaches for index structures
+	\item main result: Adapting of tree nodes to cache line and SIMD blocks and use small keys to compare as much keys as possible with one SIMD instruction
+
+\end{itemize}
+\section{Preliminaries}
+
+\subsection{Simple instruction multiple data}\label{SCM}
+Short overview of the following:
+\begin{itemize}
+	\item How SIMD works
+	\item SIMD vs vertical vector processing
+\end{itemize}
+\subsection{Considered index structures}\label{SCM}
+Short overview of the following: TODO: Maybe the problems of these old index structures?
+\begin{itemize}
+	\item Binary tree???
+	\item $B^{+}$ tree
+	\item Radix tree
+\end{itemize}
+
+\section{Adapted Tree Structures}
+TODO: Compare all 4 or merge FAST and VAST together/ extend FAST with VAST??
+\subsection{K-ary search tree}\label{SCM}
+
+\subsection{FAST}\label{SCM}
+
+\subsection{ART}\label{SCM}
+
+\subsection{VAST}\label{SCM}
+
+\section{Evaluation}
+In common:
+\begin{itemize}
+	\item SIMD instructions used to compare the search key with multiple keys of the index
+	\item Segmenting tree to blocks for a better usage of cache lines, save the data of the nodes in an adapted way
+	\item The keys should be as short as possible to compare more keys in one step and to decrease the passed data to the cache line
+	\item Each approach improves the tree traversal
+\end{itemize}
+
+Differences:
+\begin{itemize}
+	\item Node compression in VAST, Path compression in ART and K-ary seg trie
+	\item FAST and K-ary trees readonly to improve traversal, ART and FAST adapt insert too
+	\item FAST uses and K-ary trees will use GPU calculation instead of CPU
+\end{itemize}
+
+Why performance can not be compared in a useful way...
+
+\section{Related Work}
+TODO:
+\begin{itemize}
+	\item ART and VAST compared to FAST??
+	\item Ideas and implementations of the adapted trees already in III...
+\end{itemize}
+
+\section{Future work}
+???
+\begin{thebibliography}{00}
+\bibitem{b1}Mohammad Suaib, Abel Palaty and Kumar Sambhav Pandey, ``Architecture of SIMD Type Vector Processor'' in International Journal of Computer Applications (0975 - 8887) Volume 20 No.4, April 2011.
+\bibitem{b2} Jingren Zhou and Kenneth A. Ross  ``Implementing Database Operations Using SIMD Instructions'' in ACM S1GMOD '2002 June 4-6, Madison, Wisconsin, USA
+\bibitem{b3} Steffen Zeuch, Frank Huber and Johann-Christoph Freytag  ``Adapting Tree Structures for Processing with SIMD Instructions'' in Proc. 17th International Conference on Extending Database Technology (EDBT), March 24-28, 2014, Athens, Greece
+\bibitem{b4} Viktor Leis, Alfons Kemper and Thomas Neumann ``The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases'' in ???
+\bibitem{b5} Takeshi Yamamuro, Makoto Onizuka,Toshio Hitaka, and Masashi Yamamuro ``VAST-Tree: A Vector-Advanced and Compressed Structure for Massive Data Tree Traversal'' in EDBT 2012, March 26-30, 2012, Berlin, Germany.
+\bibitem{b6} Changkyu Kim, Jatin Chhugani, Nadathur Satish, Eric Sedlar, Anthony D. Nguyen,
+Tim Kaldewey, Victor W. Lee, Scott A. Brandt and Pradeep Dubey ``FAST: Fast Architecture Sensitive Tree Search
+on Modern CPUs and GPUs'' in SIGMOD’10, June 6-11, 2010, Indianapolis, Indiana, USA. TODO: Author count more than 6
+\end{thebibliography}
+
+\end{document}
