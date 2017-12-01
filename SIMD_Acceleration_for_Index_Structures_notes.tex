@@ -40,29 +40,19 @@ SIMD, index
 \end{IEEEkeywords}
 
 \section{Introduction}
-%\begin{itemize}
-%	\item General Problem: Index structures are not applicable to modern systems
-%	\subitem IO-Bottleneck moves from disk-ram  to ram-cache. CPU cycles of pure calculation got more important, cache line has to be used in an optimized way
-%	\subitem Index structures grow very high because of the massive amount of data collected in modern databases
-%	\subitem Branch-mispredictions cost many CPU cycles and should therefore be avoided
-%	\item objectives/contributions: Comparision of current work and highlighting of important approaches for index structures
-%	\item main result: Adapting of tree nodes to cache line and SIMD blocks and use small keys to compare as much keys as possible with one SIMD instruction
-%\end{itemize}
-% Main Problem: Index structures designed for disk-based database systems
+\begin{itemize}
+	\item General Problem: Index structures are not applicable to modern systems
+	\subitem IO-Bottleneck moves from disk-ram  to ram-cache. CPU cycles of pure calculation got more important, cache line has to be used in an optimized way
+	\subitem Index structures grow very high because of the massive amount of data collected in modern databases
+	\subitem Branch-mispredictions cost many CPU cycles and should therefore be avoided
+	\item objectives/contributions: Comparision of current work and highlighting of important approaches for index structures
+	\item main result: Adapting of tree nodes to cache line and SIMD blocks and use small keys to compare as much keys as possible with one SIMD instruction
+
+\end{itemize}
 After decades of creating and improving index structures for disk-based database systems, nowadays even large databases fit into the main memory. Since index structures like the $B^+$-tree [TODO: ref] or the radix tree [TODO: ref] have an important part in database-systems to realise SCAN or range-based search operations, these index structures experienced many adaptions to fulfill the needs of modern database-systems. Instead of overcoming the bottleneck of IO-oprations from disk to RAM, the target of modern index-structures is to improve the usage of CPU cache and processor architectures.
 
-% Introduce tree structures and specific Problem: Cache and TLB misses and branch mispredictions cost a lot of calculation effort
-In this paper we compare different approaches to adapt index structures to use Single Instruction Multiple Data (SIMD) [1] operations and to better overcome the bottleneck from RAM to CPU cache. We consider the K-ary Search Tree (Seg-tree) [TODO: ref], Adapted Radix Tree (ART) [4], Fast Architecture Sensitive Tree (FAST) [6], and Vector-Advanced and Compressed Structure Tree (VAST) [5]. As the authors of VAST-Tree show, important causes for increased calculation time are cache misses and branch mispredictions. To overcome branch mispredictions and to decrease CPU cycles, SIMD [TODO: ref] is used in modern index structures for tree traversal. The authors of the k-ary search show how to use SIMD to compare mutliple keys in one CPU cycle. To decrease cache misses, the authors of FAST and ART show how to adapt index structures to the cache line size.  
 
-% Objectives and Contribution
-All approaches use SIMD only for key comparison within tree traversal and try to decrease the key size to fit more keys into one SIMD register. Therefore FAST and Seg-tree only provide implementations for search algorithms. We consider the approaches VAST and ART make to implement operations like update and insert und name ideas to use SIMD for them. Consequently, with this work we make the following contributions:
-\begin{itemize}
-	\item We compare different adaptions of index structures to fulfill requirements of modern database systems
-	\item We highlight the usage of SIMD and the cache line adaptions in all approaches
-	\item We show openings in the adaptions to use other approaches to use SIMD
-\end{itemize}
-% Paper structure
-We organized the rest of the paper as follows. In section 2 we give the preliminaries for SIMD in general and for the use in index structures. In section 3 we analyse the different approaches of adapted index structures and evaluate the comparision in section 4. In section 5 we name related work. In section 5 we present our conclusion und describe future work in section 7. 
+
 \section{Preliminaries}
 
 \subsection{Single instruction multiple data}\label{SCM}
@@ -118,7 +108,7 @@ TODO:
 \section{Conclusion}
 
 \section{Future work}
-Open questions, use SIMD for tree creation/updates instead of only for traversal
+Open questions
 \begin{thebibliography}{00}
 \bibitem{b1}Mohammad Suaib, Abel Palaty and Kumar Sambhav Pandey, ``Architecture of SIMD Type Vector Processor'' in International Journal of Computer Applications (0975 - 8887) Volume 20 No.4, April 2011.
 \bibitem{b2} Jingren Zhou and Kenneth A. Ross  ``Implementing Database Operations Using SIMD Instructions'' in ACM S1GMOD '2002 June 4-6, Madison, Wisconsin, USA
