@@ -40,14 +40,6 @@ SIMD, index
 \end{IEEEkeywords}
 
 \section{Introduction}
-%\begin{itemize}
-%	\item General Problem: Index structures are not applicable to modern systems
-%	\subitem IO-Bottleneck moves from disk-ram  to ram-cache. CPU cycles of pure calculation got more important, cache line has to be used in an optimized way
-%	\subitem Index structures grow very high because of the massive amount of data collected in modern databases
-%	\subitem Branch-mispredictions cost many CPU cycles and should therefore be avoided
-%	\item objectives/contributions: Comparision of current work and highlighting of important approaches for index structures
-%	\item main result: Adapting of tree nodes to cache line and SIMD blocks and use small keys to compare as much keys as possible with one SIMD instruction
-%\end{itemize}
 % Main Problem: Index structures designed for disk-based database systems
 After decades of creating and improving index structures for disk-based database systems, nowadays even large databases fit into the main memory. Since index structures like the $B^+$-tree [TODO: ref] or the radix tree [TODO: ref] have an important part in database-systems to realise SCAN or range-based search operations, these index structures experienced many adaptions to fulfill the needs of modern database-systems. Instead of overcoming the bottleneck of IO-oprations from disk to RAM, the target of modern index-structures is to improve the usage of CPU cache and processor architectures.
 
@@ -59,26 +51,16 @@ All approaches use SIMD only for key comparison within tree traversal and try to
 \begin{itemize}
 	\item We compare different adaptions of index structures to fulfill requirements of modern database systems
 	\item We highlight the usage of SIMD and the cache line adaptions in all approaches
-	\item We show openings in the adaptions to use other approaches to use SIMD
+	\item We show openings for adaption for other approaches to use SIMD
 \end{itemize}
 % Paper structure
 We organized the rest of the paper as follows. In section 2 we give the preliminaries for SIMD in general and for the use in index structures. In section 3 we analyse the different approaches of adapted index structures and evaluate the comparision in section 4. In section 5 we name related work. In section 5 we present our conclusion und describe future work in section 7. 
 \section{Preliminaries}
+% Horizontal vs vertical vector processing
+A common approach of decreasing CPU cycles for algorithms is to adapt the algorithm to pipelining. While one instruction is executed, the next instruction is already fetched. In contrast to execute one operation on one date after another, the idea of SIMD is to execute a single instruction on multiple data. The authors of Rethinking SIMD Vectorization for In-Memory Databases [TODO: ref] show two general approaches to use SIMD in in-memory databases, horizontal and vertical vector processing. They name the comparision of one search key to multiple other keys horizontal vectorization, whereas processing a different input key per vector lane is named vertical vectorization. TODO: Exact difference?
 
-\subsection{Single instruction multiple data}\label{SCM}
-Short overview of the following:
-\begin{itemize}
-	\item How SIMD works
-	\item SIMD vs vertical vector processing
-\end{itemize}
-\subsection{Considered index structures}\label{SCM}
-Short overview of the following: TODO: Maybe the problems of these old index structures?
-\begin{itemize}
-	\item Binary tree???
-	\item $B^{+}$ tree
-	\item Radix tree
-\end{itemize}
-
+% How horizontal vectorization works
+Since FAST, Seg-Tree, ART and VAST only use horizontal vectorization, we focus on this approach. Modern CPUs have additional SIMD registers along with an additional instruction set adapted to process multiple data with a single instruction. For example, the authors of Seg-Tree [3] use 128-bit SIMD registers and adjusted SIMD operations to load data into a register and to compare the data of one SIMD register with another. A 128-bit SIMD register processes sixteen 8-bit or eight 16-bit data items with one instruction.
 \section{Adapted Tree Structures}
 TODO: Compare all 4 or merge FAST and VAST together/ extend FAST with VAST??
 \subsection{K-ary search tree}\label{SCM}
@@ -123,7 +105,7 @@ Open questions, use SIMD for tree creation/updates instead of only for traversal
 \bibitem{b1}Mohammad Suaib, Abel Palaty and Kumar Sambhav Pandey, ``Architecture of SIMD Type Vector Processor'' in International Journal of Computer Applications (0975 - 8887) Volume 20 No.4, April 2011.
 \bibitem{b2} Jingren Zhou and Kenneth A. Ross  ``Implementing Database Operations Using SIMD Instructions'' in ACM S1GMOD '2002 June 4-6, Madison, Wisconsin, USA
 \bibitem{b3} Steffen Zeuch, Frank Huber and Johann-Christoph Freytag  ``Adapting Tree Structures for Processing with SIMD Instructions'' in Proc. 17th International Conference on Extending Database Technology (EDBT), March 24-28, 2014, Athens, Greece
-\bibitem{b4} Viktor Leis, Alfons Kemper and Thomas Neumann ``The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases'' in ???
+\bibitem{b4} Viktor Leis, Alfons Kemper and Thomas Neumann ``The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases''
 \bibitem{b5} Takeshi Yamamuro, Makoto Onizuka,Toshio Hitaka, and Masashi Yamamuro ``VAST-Tree: A Vector-Advanced and Compressed Structure for Massive Data Tree Traversal'' in EDBT 2012, March 26-30, 2012, Berlin, Germany.
 \bibitem{b6} Changkyu Kim, Jatin Chhugani, Nadathur Satish, Eric Sedlar, Anthony D. Nguyen,
 Tim Kaldewey, Victor W. Lee, Scott A. Brandt and Pradeep Dubey ``FAST: Fast Architecture Sensitive Tree Search
