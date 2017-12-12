@@ -58,16 +58,17 @@ Several index structures have already shown that the bottleneck from RAM to CPU 
 % Paper structure
 We organized the rest of the paper as follows. In Section 2 we give the preliminaries for SIMD in general and for the use in index structures. In Section 3 we analyse the different approaches of adapted index structures and evaluate the comparision in Section 4. In section 5 we name related work. In Section 6 we present our conclusion und describe future work in Section 7. 
 \section{Preliminaries}
+\begin{figure}
+	\includegraphics[width=0.4\textwidth]{figure_1.png}
+	\caption{Coherence between data, instructions, and the results of SISD and SIMD.}
+	\label{fig}
+\end{figure}
 % SIMD explanation
-A common approach of decreasing CPU cycles for algorithms is to adapt the algorithm to pipelining. While one instruction is executed, the next instruction is already fetched. This approach executes one instruction on one data item, called Single Instruction Single Data (SISD). In contrast to execute one operation on one data item after another, the idea of SIMD is to execute a single instruction on multiple data. In Figure 1 we show the coherence between data, instructions and the results of SIMD and SISD. 
-
-% Pro's/contra's of SIMD
-Modern CPUs have additional SIMD registers along with an additional instruction set adapted to process multiple data with a single instruction. In Table 1, we show two SIMD instructions from Streaming SIMD Extensions 2 (SSE2). The main advantage of SIMD is to process multiple data parallel in contrast to pipelining and SISD. The main restriction of SIMD instructions is that a sequential load of data is required. To load data into a SIMD registert, the data has to be stored consecutively in main memory. Additionally, the size of SIMD registers is limited. Therefore processing data types of the common size of 64-bit and more lead to a small performance increase since only few data items are processed with a single instruction.
-
+A common approach of decreasing CPU cycles for algorithms is to adapt the algorithm to pipelining. While one instruction is executed, the next instruction is already fetched. This approach executes one instruction on one data item, called Single Instruction Single Data (SISD). In contrast to execute one operation on one data item after another, the idea of SIMD is to execute a single instruction on multiple data. In Figure 1 we show the coherence between data, instructions, and the results of SIMD and SISD. 
 \begin{table*}[htbp]
-	\caption{SIMD instructions from Streaming SIMD Extensions 2 (SSE2)}
+	\caption{SIMD instructions from Streaming SIMD Extensions 2 (SSE2) TODO: Maybe add some more :)}
 	\begin{center}
-		\begin{tabular}{|c|c}
+		\begin{tabular}{|c|c|}
 			\hline
 			\textbf{SIMD instruction}&\textbf{Explanation}\\
 			\hline
@@ -79,17 +80,17 @@ Modern CPUs have additional SIMD registers along with an additional instruction 
 		\label{tab1}
 	\end{center}
 \end{table*}
+% SIMD explanation
+Modern CPUs have additional SIMD registers along with an additional instruction set adapted to process multiple data with a single instruction. In Table 1, we show some SIMD instructions from Streaming SIMD Extensions 2 (SSE2). We consider \_mm\_cmpgt\_epi32 as example to show how SIMD works. After loading 4 different signed 32-bit integers in a and 4 equal signed 32-bit integers in b, we compare them using \_mm\_cmpgt\_epi32. The comparision returns a bitmask showing which of the search keys in a is greater than the one in b. This example increases the performance of comparision by times of four. 
+
+% Pro's/contra's of SIMD
+Consequently, the main advantage of SIMD is to process multiple data parallel in contrast to pipelining and SISD. The main restriction of SIMD instructions is that a sequential load of data is required. To load data into a SIMD registert, the data has to be stored consecutively in main memory. Additionally, the size of SIMD registers is limited. Therefore processing data types of the common size of 64-bit and more lead to a small performance increase since only few data items are processed with a single instruction.
 
 % Horizontal vs vertical vector processing
 Polychroniou et al. [TODO: ref] show two general approaches to use SIMD in in-memory databases, horizontal and vertical vector processing. They name the comparision of one search key to multiple other keys horizontal vectorization, whereas processing a different input key per vector lane is named vertical vectorization.
 
 % How horizontal vectorization works
 Since FAST, Seg-Tree, ART and VAST only use horizontal vectorization, we focus on this approach.  For example, Zeuch et al. [3] use 128-bit SIMD registers and adjusted SIMD operations to load data into a register and to compare the data of one SIMD register with another. A 128-bit SIMD register processes sixteen 8-bit or eight 16-bit data items with one instruction. In Table 1 TODO: Insert Table! we show a comparision of key size and the number of keys that can be processed parallel with one SIMD instruction.
-\begin{figure}
-	\includegraphics[width=0.4\textwidth]{figure_1.png}
-	\caption{Coherence between data, instructions and the results of SISD and SIMD.}
-	\label{fig}
-\end{figure}
 
 % SIMD restrictions
 
@@ -98,18 +99,23 @@ Since FAST, Seg-Tree, ART and VAST only use horizontal vectorization, we focus o
 % TODO: Compare all 4 or merge FAST and VAST together/ extend FAST with VAST??
 \subsection{Seg-Tree}\label{SCM}
 % Basics k-ary search
-Zeuch et al. [TODO: ref] adapted the $B^+$-Tree by having a k-ary search tree as each inner node, called segment, and perform a k-ary search on each segment. The k-ary search bases on the binary search but divides the search space into k partitions with k-1 seperators. Compared to binary search the k-ary search reduces the complexity from $O(\log{2}{n})$ to $O(\log{k}{n})$. They consider $m$ as the most bits to represent a datatype and $\vert SIMD \vert$ as the size of SIMD-register, called SIMD bandwith. Furthermore, $k = \frac{\vert SIMD \vert }{m}$ defines the count of partitions for the k-ary search. 
+Zeuch et al. [3] adapted the $B^+$-Tree by having a k-ary search tree as each inner node, called segment, and perform a k-ary search on each segment.  In Figure 2, we show the adaption of nodes made by Zeuch et al. for Seg-Tree. The k-ary search bases on the binary search but divides the search space into k partitions with k-1 seperators. Compared to binary search the k-ary search reduces the complexity from $O(\log{2}{n})$ to $O(\log{k}{n})$. They consider $m$ as the most bits to represent a datatype and $\vert SIMD \vert$ as the size of SIMD-register, called SIMD bandwith. Furthermore, $k = \frac{\vert SIMD \vert }{m}$ defines the count of partitions for the k-ary search. 
+
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figure_2.png}
+	\caption{Inner node format of Seg-Tree}
+	\label{fig}
+\end{figure}
 
 % Performing k-ary search on Seg-tree
-As mentioned before, each segment of the Seg-Tree is a k-ary search tree. To perform a k-ary search on a segment, Zeuch et al. [TODO: ref] make a linearization of the segment. They show two algorithms for linearization, breadth-first search and depth-first search. Because of the condition $k = \frac{\vert SIMD \vert }{m}$, each partition of the k-ary search fits into a SIMD register and can be compared to the search key. A perfect k-ary search tree contains  $S_{max} = k^h - 1$ keys for an integer $h > 0$. The considered search algorithm only works for sequences with a multiple of $k-1$ keys. In case of  sequences with less than a multiple of $k-1$ keys, they replenish the sequence with Elements having the value $k_{max} + 1$ for the maximal key value $k_{max}$ in the sequence. Consequently, the adapted search algorithm works for sequences with less than a multiple of $k-1$ keys.
-\textbf{TODO: Fix: In figure 1, we show the adaption of nodes made by the authors of Seg-Tree. Todo: Figure!}
+As mentioned before, each segment of the Seg-Tree is a k-ary search tree. To perform a k-ary search on a segment, Zeuch et al. make a linearization of the segment. They show two algorithms for linearization, breadth-first search and depth-first search. Because of the condition $k = \frac{\vert SIMD \vert }{m}$, each partition of the k-ary search fits into a SIMD register and is compared to the search key. A perfect k-ary search tree contains  $S_{max} = k^h - 1$ keys for an integer $h > 0$. The considered search algorithm only works for sequences with a multiple of $k-1$ keys. In case of  sequences with less than a multiple of $k-1$ keys, they replenish the sequence with Elements having the value $k_{max} + 1$ for the maximal key value $k_{max}$ in the sequence. Consequently, the adapted search algorithm works for sequences with less than a multiple of $k-1$ keys.
 
 % Performance increase
 The performance of Seg-Tree depends on k-ary search. The smaller a key the more keys are compared parallel. According to the relevance of 32 and 64-bit data types in modern systems, the k-ary search performance increases only by the factor of four for 32-bit types and two for 64-bit types.
 
 % Addional adaption: Seg-trie
 %TODO: Each Node is also k-ary search tree
-Zeuch et al. [TODO: ref] also show the k-ary search on an adapted prefix tree \emph{(trie for short)} [TODO: ref] called Seg-Trie. A trie is a search tree where each node stores a part of the key. Each node is again designed as a k-ary search tree. TODO: Useful? Complete keys are stored in leave nodes or are build by concatenating partial keys from the root node to a leave node. This approach benefits of the separation of the keys in different levels of the tree. Consequently, the compare keys are smaller and more keys can be compared parallel. The Seg-Trie$_L$ is defined as a balanced trie where each node on each level contains one part of the key with $L$ Bits. The tree has $r = \frac{m}{L}$ levels $(E_0, E_1, .., E_r)$, where m is the number of most bits to represent the data type.
+Zeuch et al. also show the k-ary search on an adapted prefix tree \emph{(trie for short)} [TODO: ref] called Seg-Trie. A trie is a search tree where each node stores a part of the key. Each node is again designed as a k-ary search tree. TODO: Useful? Complete keys are stored in leave nodes or are build by concatenating partial keys from the root node to a leave node. This approach benefits of the separation of the keys in different levels of the tree. Consequently, the compare keys are smaller and more keys can be compared parallel. The Seg-Trie$_L$ is defined as a balanced trie where each node on each level contains one part of the key with $L$ Bits. The tree has $r = \frac{m}{L}$ levels $(E_0, E_1, .., E_r)$, where m is the number of most bits to represent the data type.
 
 % K-ary search on Seg-Trie
 To perfom a tree traversal on the seg-trie, the search key is split into $r$ segments and each segment $r_i$ is compared to the level $E_i$. If a matching partial key is found in one node of $E_i$, the search continues at the referrenced node for the partial key. If no match of the partial key is found, the Seg-Trie does not contain the search key and the search is finished. Consequently, the advantage of Seg-Trie against tree structures is the reduced comparision effort from non-exisiting key segments. 
