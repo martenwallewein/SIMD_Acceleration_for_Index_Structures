@@ -90,7 +90,7 @@ Consequently, the main advantage of SIMD is to process multiple data parallel in
 Polychroniou et al. [7] show two general approaches to use SIMD in in-memory databases, horizontal and vertical vector processing. They name the comparision of one search key to multiple other keys horizontal vectorization, whereas processing a different input key per vector lane is named vertical vectorization.
 
 % How horizontal vectorization works
-Since FAST, Seg-Tree, ART and VAST only use horizontal vectorization, we focus on this approach.  For example, Zeuch et al. [3] use 128-bit SIMD registers and adjusted SIMD operations to load data into a register and to compare the data of one SIMD register with another. A 128-bit SIMD register processes sixteen 8-bit or eight 16-bit data items with one instruction. In Table 1 TODO: Insert Table! we show a comparision of key size and the number of keys that can be processed parallel with one SIMD instruction.
+Since FAST, Seg-Tree, ART and VAST only use horizontal vectorization, we focus on this approach.  For example, Zeuch et al. [3] use 128-bit SIMD registers and adjusted SIMD operations to load data into a register and to compare the data of one SIMD register with another. A 128-bit SIMD register processes sixteen 8-bit or eight 16-bit data items with one instruction. In Table 2 TODO: Insert Table! we show a comparision of key size and the number of keys that can be processed parallel with one SIMD instruction.
 
 % SIMD restrictions
 
