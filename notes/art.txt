@@ -1,0 +1,21 @@
+ART:
+- Advantage of prefix tree
+- Use different node types to increase performance and decrease space consumption
+-> When a When the capacity of a node is exhausted due to insertion, it is replaced by a larger node type. When a node becomes underfull, it is replaced by a smaller node type
+- Node tpes:
+Inner nodes:
+- Node4: smallest node type, can store up to 4 child pointer. Has array of 4 keys and 4 pointers. Keys are sorted.
+- Node16: Between 5 and 16 child. Again two different arrays for children and keys.
+- Node48: 256 element array which can be indexed with key bytes directly. Second array with up to 48 pointers. 
+- Node256: Array of 256 pointers to next nodes. Next node can be found very efficiently using a single lookup of the key byte in the array.
+-> Header of 16 Bytes for node type, number of children and the compressed path
+Leaf nodes: 
+- Combined pointer/value slots: if values fit into pointers, no separate node types are necessary. Instead, each pointer storage location in an inner node can either store a pointer or a value. Values and pointers can be distinguished using one additional bit per pointer or with
+pointer tagging.
+- Lazy expansion: inner nodes are only created if they are required to distinguish at least two leaf nodes.
+- Path compression: removes all inner nodes that have only a single child
+
+SIMD use:
+- Horizontal vectorization comparing multiple keys against one search key which is replicated. ART uses linear search with SIMD style processing. 
+
+Performance:

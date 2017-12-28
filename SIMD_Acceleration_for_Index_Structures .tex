@@ -117,7 +117,7 @@ The performance of Seg-Tree depends on k-ary search. The smaller a key the more 
 \begin{figure*}
 	\includegraphics[width=1.0\textwidth]{figure_3.png}
 	\caption{(a) Node indices (=memory locations) of the binary tree (b) Rearranged nodes with SIMD blocking (c) Index tree blocked in three-level
-		hierarchy – first-level page blocking, second-level cache line blocking, third-level SIMD blocking.}
+		hierarchy – first-level page blocking, second-level cache line blocking, third-level SIMD blocking. Adapted from Zeuch et al. [3].}
 	\label{fig}
 \end{figure*}
 
@@ -146,7 +146,26 @@ Changkyu et al. consider the search performance as queries per second. The CPU s
 % Mention Compression?
 
 \subsection{ART}\label{SCM}
+% Basics about radix tree
+Leis et al. adapted a radix tree [4] for efficient indexing in main-memory database systems called Adaptive Radix Tree. The height of a radix tree depends on the chunk size of They differentiate between inner nodes and leaf nodes and adapt each of them in a different way. 
 
+% Adaption of inner nodes
+Instead of using a constant node size for each inner node, they present four types of nodes with different numbers of keys and children. The types of nodes, sorted ascending by their size, are \emph{Node4}, \emph{Node16}, \emph{Node48}, and \emph{Node256}. When the capacity of a node is exhausted due to insertion, it is replaced by a larger node type. When a node becomes underfull due to key removal, it is replaced by a smaller node type. In Figure 4, we show these node types containing keys that are mapped to subtrees.
+
+% Inner node types
+\textbf{Node4}: The smallest node type consists of one array with up to four sorted keys and another array with up to four children. The keys and pointers are stored at corresponding positions.
+
+\textbf{Node16}: This node type consists of arrays of 16 keys and 16 children, storing keys and children analogue to \emph{Node4}.
+
+\textbf{Node48}: To avoid searching keys in many elements, this node type does not store the keys explicitly. Instead, an array with 256 elements is used. This array can be indexed with key bytes directly. It stores indexes into a second array with the size of 48 elements containing the pointers to child nodes.
+
+\textbf{Node256}: The largest node type is simply an array of 256 pointers. Consequently, the next node can be found efficiently using a single lookup of the key byte in that array. 
+
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figure_4.png}
+	\caption{Inner nodes of ART. The partial keys 0, 2, 3, and 255 are mapped to the subtrees a, b, c, and d. Adapted from Leis et al. [4].}
+	\label{fig}
+\end{figure}
 \subsection{VAST}\label{SCM}
 
 \section{Evaluation}
