@@ -147,7 +147,7 @@ Changkyu et al. consider the search performance as queries per second. The CPU s
 
 \subsection{ART}\label{SCM}
 % Basics about radix tree
-Leis et al. adapted a radix tree [4] for efficient indexing in main-memory database systems called Adaptive Radix Tree. The height of a radix tree depends on the chunk size of They differentiate between inner nodes and leaf nodes and adapt each of them in a different way. 
+Leis et al. adapted a radix tree [4] for efficient indexing in main-memory database systems called Adaptive Radix Tree. The height of a radix tree depends on the chunk size of They differentiate between inner nodes and leaf nodes and adapt each of them in a different way. TODO: 8 Bit chunks!
 
 % Adaption of inner nodes
 Instead of using a constant node size for each inner node, they present four types of nodes with different numbers of keys and children. The types of nodes, sorted ascending by their size, are \emph{Node4}, \emph{Node16}, \emph{Node48}, and \emph{Node256}. When the capacity of a node is exhausted due to insertion, it is replaced by a larger node type. When a node becomes underfull due to key removal, it is replaced by a smaller node type. In Figure 4, we show these node types containing keys that are mapped to subtrees.
@@ -160,6 +160,18 @@ Instead of using a constant node size for each inner node, they present four typ
 \textbf{Node48}: To avoid searching keys in many elements, this node type does not store the keys explicitly. Instead, an array with 256 elements is used. This array can be indexed with key bytes directly. It stores indexes into a second array with the size of 48 elements containing the pointers to child nodes.
 
 \textbf{Node256}: The largest node type is simply an array of 256 pointers. Consequently, the next node can be found efficiently using a single lookup of the key byte in that array. 
+
+% Leaf Node implementation
+For leaf nodes, Leis et al. use a mix of pointer and value slots in an array. If the value fits within the slot, they store it directly in the slot. Otherwise, a pointer to the value is stored. They tag each element with an additional bit indicating if a pointer or a value is stored.
+
+% SIMD usage
+According to FAST and Seg-Tree, Leis et al. use SIMD within the tree traversal. They use horizontal vectorization, comparing the search key against multiple keys of a node. In contrast to Zeuch et al., using horizontal vectorisation for each inner node, Leis et al. only compare the keys of nodes with type \emph{Node16} in parallel. Therefor, they replicate the search key 16 times and compare these against all keys of the nodes of type \emph{Node16}.
+
+% Space consumption
+In contrast to FAST and Seg-Tree, the goal of ART is also to reduce space consumption. Leis et al. use lazy expansion and path compression. The first technique, lazy expansion, is to create inner nodes only if they are required to distinguish at least two leaf nodes. The second technique, path compression, removes all inner nodes that have only one child.
+
+% Performance increase
+Since SIMD is only used in the tree search, we don't consider the performance increases of ART in insert and update operations. Leis et al. show, that looking up random keys using ART is faster than Seg-Tree and FAST, because ART has less cache misses and less CPU cycles per comparison. They consider the performance increases for dense and sparse keys, whereas ART works better with dense keys. Also they show that a span of 8 results in better performance than a smaller span. 
 
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{figure_4.png}
