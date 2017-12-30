@@ -97,7 +97,7 @@ Since FAST, Seg-Tree, ART and VAST only use horizontal vectorization, we focus o
 %TODO: Figure over 2 columns, include lipsum/multicol packe 
 \section{Adapted Tree Structures}
 % TODO: Compare all 4 or merge FAST and VAST together/ extend FAST with VAST??
-In this section we present the previously mentioned index structures Seg-Tree, FAST, ART, and VAST. We consider the adaptions made compared to the base index structure, the usage of SIMD, and the performance gain presented by the authors of the index structures.
+In this section we present the previously mentioned index structures Seg-Tree, FAST, ART, and VAST. We consider the adaptions made compared to the base index structure, the usage of SIMD, and the performance gain presented by the authors of the certain index structures.
 \subsection{Seg-Tree}\label{SCM}
 % Basics k-ary search
 Zeuch et al. adapted the $B^+$-Tree by having a k-ary search tree as each inner node, called segment, and perform a k-ary search on each segment.  In Figure 2, we show the adaption of nodes made by Zeuch et al. for Seg-Tree. The k-ary search bases on the binary search but divides the search space into k partitions with k-1 seperators. Compared to binary search the k-ary search reduces the complexity from $O(\log{2}{n})$ to $O(\log{k}{n})$. They consider $m$ as the most bits to represent a datatype and $\vert SIMD \vert$ as the size of SIMD-register, called SIMD bandwith. Then, $k = \frac{\vert SIMD \vert }{m}$ defines the number of partitions for the k-ary search. 
@@ -165,7 +165,7 @@ Instead of using a constant node size for each inner node, they present four typ
 For leaf nodes, Leis et al. use a mix of pointer and value slots in an array. If the value fits within the slot, they store it directly in the slot. Otherwise, a pointer to the value is stored. They tag each element with an additional bit indicating if a pointer or a value is stored.
 
 % SIMD usage
-According to FAST and Seg-Tree, Leis et al. use SIMD within the tree traversal. They use horizontal vectorization, comparing the search key against multiple keys of a node. In contrast to Zeuch et al., using horizontal vectorisation for each inner node, Leis et al. only compare the keys of nodes with type \emph{Node16} in parallel. Therefor, they replicate the search key 16 times and compare these against all keys of the nodes of type \emph{Node16}.
+According to FAST and Seg-Tree, Leis et al. use SIMD within the tree traversal. They use horizontal vectorization, comparing the search key against multiple keys of a node. In contrast to Zeuch et al., using horizontal vectorisation for each inner node, Leis et al. only compare the keys of nodes with type \emph{Node16} in parallel. Therefor, they replicate the search key 16 times and compare these against all keys of nodes of type \emph{Node16}.
 
 % Space consumption
 In contrast to FAST and Seg-Tree, the goal of ART is also to reduce space consumption. Leis et al. use lazy expansion and path compression. The first technique, lazy expansion, is to create inner nodes only if they are required to distinguish at least two leaf nodes. The second technique, path compression, removes all inner nodes that have only one child.
@@ -179,6 +179,23 @@ Since SIMD is only used in the tree search, we don't consider the performance in
 	\label{fig}
 \end{figure}
 \subsection{VAST}\label{SCM}
+% What is from FAST
+Yamamuro et al. extended FAST building an index structure called Vector-Advanced and Compressed Structure Tree (VAST) [5]. They adapt the blocking and aligning structure of FAST and add compression of nodes along with improved SIMD usage. In Figure 5, we show the structure of the VAST-Tree including layers and different blocking elements. The top layer $P_{32}$ uses the techniques of FAST with the same SIMD, cache line and page blocking with 32 bit keys.
+
+% Block compression
+In order to decrease the size of the index structure to better fit into main memory, the middle and bottom layers use compressed nodes. In the layer $P_{16}$ the 32 bit keys of each node are compressed to 16 bit keys using lossy compression. Analogue, in $P_8$ the keys are compressed to 8 bit with lossy compression. In the leaf nodes Yamamuro et al. decrease the node size with the lossless compression algorithm \emph{P4Delta}, which a good balance between compression ratio and decompression speed. If an error occurs due to information loss, they present an algorithm for error correction.
+
+% SIMD usage
+Along with the other considered index structures, Yamamuro et al. compare multiple keys to one search key with SIMD in the tree traversal. Due to the key compression of nodes, the VAST-Tree compares more keys in parallel than FAST. Additionally, they reduce branch misses with an adapted SIMD usage. They use addition and multiplication operations on the results of a SIMD key comparison, instead of if-then paths, to find the next node in tree traversal.
+
+% Performance
+Due to lossy and lossless compression of the majority of nodes, Yamamuro et al. present a 95\% less space consumption of the VAST-Tree compared to a binary tree or FAST. We consider an index with $2^{32}$ keys. They reach up to $6.0$ and $1.24$ times performance increase compared to a binary tree and FAST. Although errors occur due to lossy compression, the error correction does not take a major influence on the traversal speed.
+
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figure_5.png}
+	\caption{An overview of VAST-Tree. The top layer ($P_{32}$) of VAST-Tree uses FAST techniques, and VAST-Tree compresses the middle and the bottom layers ($P_{16}$ and $P_8$) of the trees. Moreover, keys in leaf nodes ($key_1, key_2, ...,	key_N$) are compressed by using lossless compression. Adapted from Yamamuro et al. [5].}
+	\label{fig}
+\end{figure}
 
 \section{Evaluation}
 In common:

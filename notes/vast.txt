@@ -1,0 +1,19 @@
+adaption:
+- Same blocking/aligning structure than fast, lossy compression of middle and bottom layers
+- Instead of 'if-then' paths, addition and multiplication instructions are used to traverse trees based on the results of SIMD instructions to exclude branch penalties.
+- compression technique applied to branch nodes makes each key size small, and enables the more number of keys to be loaded into a SIMD register. As a result, it increases the number of simultaneous comparisons.
+- VAST-Tree compresses comparison keys inside branch nodes and keys on leaf nodes; lossy compression is applied to the comparison keys to strongly reduce the bit number, while keys on leaf nodes undergo lossless compression.
+
+details:
+- classifies branch nodes into multiple layers
+- cache coscious, aligned, branch free structures
+- adatpive compression and SIMD to the middle and bottom layers of branch nodes
+- Added compression blocks to FAST Layout
+- lossy compression of middle and bottom layers, lossfree compression (p4Delta) on leaf nodes to decrease index size.
+
+SIMD usage:
+- Same as FAST, used comparing all keys of a SIMD block in parallel, horizontal vectorization
+
+performance:
+- compacts branch nodes by more than 95%, index size by 47-84% with 2^30 keys, with 2^28 keys up to 6.0 times and 1.24 times throughput compared to binary trees and FAST
+- Again not only performance but also index size

@@ -1,3 +1,11 @@
+Notes:
+- Better explain comparision with lookup table
+- Blocking and aligning of FAST results in bigger index size because of padding
+
+Evaluation:
+- SIMD usage in Comparing multiple keys against the search key, used in tree search. Because update insert delete also need search, difficult to optimize these operations with SIMD.
+- Along with growing main memory sizes fastly growing index sizes
+
 Ideas:
 - Compress keys to better fill up SIMD registers to increase parallelism and to better pass through cache line
 - Adapt trees to hardware criteria (cache line, available registers, ...)
