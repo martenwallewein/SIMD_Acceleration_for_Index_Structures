@@ -198,14 +198,28 @@ Due to lossy and lossless compression of the majority of nodes, Yamamuro et al. 
 \end{figure}
 
 \section{Evaluation}
-In common:
+% What we want to do:
+In this section, we present the most important points of index structures that lead to performance decrease. We compare the adaptions made in Seg-Tree, FAST, ART, and VAST to overcome these points and also show differences. We focus on the usage of SIMD within the adapted index structures. 
+All considered adaptions have the following points in common:
+% In Common:
 \begin{itemize}
+	\item Keep the key size as small as possible, to compare more keys in parallel
+	\item Segmenting tree to blocks for a better usage of SIMD registers and cache lines
 	\item SIMD instructions used to compare the search key with multiple keys of the index
-	\item Segmenting tree to blocks for a better usage of cache lines, save the data of the nodes in an adapted way
-	\item The keys should be as short as possible to compare more keys in one step and to decrease the passed data to the cache line
-	\item Each approach improves the tree traversal
 \end{itemize}
 
+% Small keys, to compare more in parallel
+Before looking at the differences, we go into detail for each entry of the list. At first, keeping the key size as small as possible speeds up the search performance, because more keys can be compared with a single SIMD instruction. Additionally, the smaller the keys are, the more keys fit into the cache line. Since tries or radix trees, depending on their span, have small chunks of the search key in each node, SIMD speeds up the comparison performance by a considerable factor. If keys are stored completely in one node, like in Seg-Tree and FAST, Yamamuro et al. show that compression of keys results in better search performance [5].
+
+% Segmenting the tree
+Secondly, all adapted index structures are segmented into blocks (we consider each node of Seg-Tree, a k-ary search tree, also as block). 
+
+% SIMD usage
+Segmenting the index structure is important to reach a better performance increase with SIMD instructions. Since the data for a SIMD operation has to be stored sequentially in main memory, a good segmenting and blocking strategy is necessary. In Section 2, we present the vertical vectorization as alternative to horizontal vectorization. Due to the necessary of sequential store of the data in main memory, comparing a different search key per vector lane is not applicable for SIMD instructions in tree traversal. Therefore, all considered adaptions use horizontal vectorization. 
+
+% Decreasing Branch misses with addition/multiplication operations
+
+% Performance comparison
 Differences:
 \begin{itemize}
 	\item Node compression in VAST, Path compression in ART and K-ary seg trie
@@ -229,7 +243,10 @@ TODO:
 \section{Conclusion}
 
 \section{Future work}
-Open questions, use SIMD for tree creation/updates instead of only for traversal
+- Using k-ary search in FAST/VAST
+- Looking in detail to the decrease of branch misses using addition/multiplication operations and SIMD, combine with k-ary search
+
+%Open questions, use SIMD for tree creation/updates instead of only for traversal
 \begin{thebibliography}{00}
 \bibitem{b1}Mohammad Suaib, Abel Palaty and Kumar Sambhav Pandey, ``Architecture of SIMD Type Vector Processor'' in International Journal of Computer Applications (0975 - 8887) Volume 20 No.4, April 2011.
 \bibitem{b2} Jingren Zhou and Kenneth A. Ross  ``Implementing Database Operations Using SIMD Instructions'' in ACM S1GMOD '2002 June 4-6, Madison, Wisconsin, USA
