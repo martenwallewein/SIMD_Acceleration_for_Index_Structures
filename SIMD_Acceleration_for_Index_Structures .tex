@@ -247,23 +247,26 @@ In main-memory database systems, a $B^+$-Tree does not fulfill the requirements 
 During the traversal of an index structure in modern database systems, a huge number of keys are compared. Consequently, using SIMD instructions leads to better search performance. Polychroniou et al. consider different techniques to process multiple data items with one SIMD instruction [7]. They differentiate between horizontal and vertical vector processing and present benefits of each approach. Morrison et al. show the implementations of database operations with SIMD and compare SIMD and scalar processing of data items [10].
  
 % k-ary search
+To compare as less keys as possible within one node to find the matching children, Zeuch et al. show the performance increase using k-ary search with SIMD instructions [3]. Schlegel et al. present the general benefits of k-ary search on modern processors [11]. 
 
 % Comparison of adapted index structures
 Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST [5] and ART [4] to FAST and show the performance increase. 
 
+TODO: Add related work:
 \begin{itemize}
-	\item MainMemory Index Structures with Fixed Size Partial Keys, looking at tries
-	\item Rethinking SIMD Vectorization for In-Memory Databases
-	\item Implementing Database Operations Using SIMD Instructions, comparison of SIMD vs vector processing, other db operations Ref: D. R. Morrison, “PATRICIA-practical algorithm to retrieve information
-	coded in alphanumeric,” J. ACM, vol. 15, no. 4, 1968.
-	\item k-ary search: B. Schlegel, R. Gemulla, and W. Lehner, “k-ary search on modern
-	processors,” in DaMoN workshop, 2009.
-	\item ART and VAST compare to FAST
-	\item better cache line behaviour of B+ trees Ref: J. Rao and K. A. Ross. Cache conscious indexing for decision support in main
-	memory. In VLDB, pages 78–89, 1999.
-	\item Efficient cache line usage with compression Ref: M. Zukowski, S. Heman, N. Nes, and P. Boncz. Super-scalar ram-cpu cache
-	compression. In ICDE, page 59, 2006.
+	\item GPU and SIMD
+	\item Other tree structures, T-Tree, CSB-Tree, HAT-Tree, KISS-Tree
 \end{itemize}
+
+%\begin{itemize}
+%	\item MainMemory Index Structures with Fixed Size Partial Keys, looking at tries
+%	\item Rethinking SIMD Vectorization for In-Memory Databases
+%	\item Implementing Database Operations Using SIMD Instructions, comparison of SIMD vs vector processing, other db operations Ref: D. R. Morrison, “PATRICIA-practical algorithm to retrieve information coded in alphanumeric,” J. ACM, vol. 15, no. 4, 1968.
+%	\item k-ary search: B. Schlegel, R. Gemulla, and W. Lehner, “k-ary search on modern	processors,” in DaMoN workshop, 2009.
+%	\item ART and VAST compare to FAST
+%	\item better cache line behaviour of B+ trees Ref: J. Rao and K. A. Ross. Cache conscious indexing for decision support in main	memory. In VLDB, pages 78–89, 1999.
+%	\item Efficient cache line usage with compression Ref: M. Zukowski, S. Heman, N. Nes, and P. Boncz. Super-scalar ram-cpu cache	compression. In ICDE, page 59, 2006.
+%\end{itemize}
 
 \section{Conclusion}
 - Which points are important to speed up index structures for modern systems:\\
@@ -274,10 +277,12 @@ Comparing adapted index structures for modern database systems leads to find imp
 - Table of entries that improve performance and space consumption and mark which structure implement the entry\\
 - entries: \\
 \section{Future work}
-- Using k-ary search in FAST/VAST
-- Looking in detail to the decrease of branch misses using addition/multiplication operations and SIMD
-- combine FAST with k-ary search
-- Another use of SIMD in index structures than search
+\begin{itemize}
+	\item Using k-ary search in FAST/VAST
+	\item Looking in detail to the decrease of branch misses using addition/multiplication operations and SIMD
+	\item Another use of SIMD in index structures than search, other DB operations
+\end{itemize}
+
 %Open questions, use SIMD for tree creation/updates instead of only for traversal
 \begin{thebibliography}{00}
 \bibitem{b1}Mohammad Suaib, Abel Palaty and Kumar Sambhav Pandey, ``Architecture of SIMD Type Vector Processor'' in International Journal of Computer Applications (0975 - 8887) Volume 20 No.4, April 2011.
