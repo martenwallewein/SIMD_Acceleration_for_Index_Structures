@@ -220,7 +220,7 @@ At least, we consider the usage of SIMD of the index structures. Segmenting the 
 The traversal speed also depends on the evaluation of a comparison with SIMD operations. Changkyu et al. use if-then paths to evaluate the bitmask of a SIMD comparison, which leads to more branch misses compared to the approach of Yamamuro et al. They perform addition and multiplication operations on the bitmask to avoid branch misses for better search performance.
 
 % Performance comparison
-Additionally, we consider the performance of the adapted index structures. The performance increases highly depend on the underlying hardware, the data types chosen for the keys, and the amount of keys inserted in the index structure. Therefore, comparing all structures directly does not lead to reasonable results. Although, Yamamuro et al. compare the VAST-Tree to FAST [5], they only consider specific key sizes and data types. 
+Additionally, we consider the performance of the adapted index structures. The performance increases highly depend on the underlying hardware, the data types chosen for the keys, and the amount of keys inserted in the index structure. Therefore, comparing all structures directly does not lead to reasonable results. Although, Yamamuro et al. and Leis et al. compare the VAST-Tree [5] and ART [4] to FAST, they only consider specific key sizes and data types. 
 
 %Differences
 Furthermore, we present the following differences in the adaptions of the index structures:
@@ -240,11 +240,29 @@ Since all considered index structures use SIMD only for tree traversal, Zeuch et
 At least, we consider the usage of SIMD with the GPU. Zeuch et al. and Changkyu et al. present algorithms to use GPU calculation for the Seg-Tree/Trie [3]. They compare one search key against multiple other keys with SIMD registers in the GPU, analogue to CPU usage. Since passing data to GPU registers is completely different compared to CPU registers and the other index structures only use the CPU, we don't go further into details of CPU calculation with SIMD. \textbf{TODO: References for SIMD with GPU?}
 
 \section{Related Work}
-TODO:
+% B+ Tree adaptions, compression
+In main-memory database systems, a $B^+$-Tree does not fulfill the requirements of efficient cache line usage. Rao et al. show improved cache line usage for $B^+$-Trees [8]. Compression is used to decrease the index size to fill more keys into the cache line. Zukowski et al. show the performance increase of better cache line usage with compression [9]. 
+
+% SIMD usage, vectorisation
+During the traversal of an index structure in modern database systems, a huge number of keys are compared. Consequently, using SIMD instructions leads to better search performance. Polychroniou et al. consider different techniques to process multiple data items with one SIMD instruction [7]. They differentiate between horizontal and vertical vector processing and present benefits of each approach. Morrison et al. show the implementations of database operations with SIMD and compare SIMD and scalar processing of data items [10].
+ 
+% k-ary search
+
+% Comparison of adapted index structures
+Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST [5] and ART [4] to FAST and show the performance increase. 
+
 \begin{itemize}
-	\item ART and VAST compared to FAST??
-	\item Ideas and implementations of the adapted trees already in III...
-	\item KD-Tree with SIMD
+	\item MainMemory Index Structures with Fixed Size Partial Keys, looking at tries
+	\item Rethinking SIMD Vectorization for In-Memory Databases
+	\item Implementing Database Operations Using SIMD Instructions, comparison of SIMD vs vector processing, other db operations Ref: D. R. Morrison, “PATRICIA-practical algorithm to retrieve information
+	coded in alphanumeric,” J. ACM, vol. 15, no. 4, 1968.
+	\item k-ary search: B. Schlegel, R. Gemulla, and W. Lehner, “k-ary search on modern
+	processors,” in DaMoN workshop, 2009.
+	\item ART and VAST compare to FAST
+	\item better cache line behaviour of B+ trees Ref: J. Rao and K. A. Ross. Cache conscious indexing for decision support in main
+	memory. In VLDB, pages 78–89, 1999.
+	\item Efficient cache line usage with compression Ref: M. Zukowski, S. Heman, N. Nes, and P. Boncz. Super-scalar ram-cpu cache
+	compression. In ICDE, page 59, 2006.
 \end{itemize}
 
 \section{Conclusion}
@@ -271,6 +289,8 @@ TODO:
 Tim Kaldewey, Victor W. Lee, Scott A. Brandt and Pradeep Dubey ``FAST: Fast Architecture Sensitive Tree Search
 on Modern CPUs and GPUs'' in SIGMOD’10, June 6-11, 2010, Indianapolis, Indiana, USA.
 \bibitem{b7}Orestis Polychroniou, Arun Raghavan and Kenneth A. Ross, ``Rethinking SIMD Vectorization for In-Memory Databases'' in SIGMOD’15, May 31-June 4, 2015, Melbourne, Victoria, Australia.
+\bibitem{b8} J. Rao and K. A. Ross ``Cache conscious indexing for decision support in main memory'' in VLDB, pages 78-89, 1999.
+\bibitem{b9}  M. Zukowski, S. Heman, N. Nes, and P. Boncz. ``Super-scalar ram-cpu cache compression'' in ICDE, page 59, 2006.
 \end{thebibliography}
 
 \end{document}
