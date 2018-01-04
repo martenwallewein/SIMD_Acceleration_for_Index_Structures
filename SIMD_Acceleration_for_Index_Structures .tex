@@ -229,6 +229,25 @@ Furthermore, we present the following differences in the adaptions of the index 
 	\item FAST and Seg-Tree are read-only, ART and FAST implement update and delete operations
 	\item Usage of GPU instead of CPU calculation
 \end{itemize}
+\begin{table*}[htbp]
+	\caption{Considered adaptions of index structures and the extracted points to increase the performance}
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			\textbf{Name of extracted performance issue}&\textbf{Seg-Tree/Trie}&\textbf{FAST}&\textbf{ART}&\textbf{VAST}\\
+			\hline
+			Decrease branch and cache misses & - & x & - & x\\
+			Full use of cache line using blocking and alignment & - & x & o & x\\
+			Using SIMD to compare multiple keys in parallel & x & x & x & x\\
+			Save space and cache line bandwidth using compression & o & - & x & x\\
+			Adapted search algorithm compared to linear search & x & - & - & -\\
+			\hline
+			Legend: x: implements the issue, o: partially implements the issue, -: not implements the issue & & & &\\
+			\hline
+		\end{tabular}
+		\label{tab1}
+	\end{center}
+\end{table*}
 
 % Usage and type of compression
 We presented above that compression leads to better search performance and less space consumption. Anyway, different compression approaches are used by the index structures. We consider two compression techniques, block and path compression. Yamamuro et al. use lossy block compression to decrease the key size of blocks. Consequently, they compare more keys with one SIMD instruction, whereas performance decrease of the occurring errors is smaller than the performance increase of the compression. Instead of compressing blocks, Seg-Trie and ART use path compression to decrease the tree height. Consequently, less nodes are passed to reach the matching leaf node, if it exists.
@@ -267,33 +286,17 @@ In this work, we compare adapted index structures for modern database systems an
 % What changes
 Index structures which were designed for disk-based memory database systems does not fulfill the requirements of modern database systems. Due to in-memory database systems, the IO-bottleneck moves from disk to RAM further to RAM to cache. Furthermore, not only the number of CPU cycles restricts the performance, also cache and branch misses have an important impact of performance. Modern CPUs provide multiple SIMD registers and instructions to process multiple data items in parallel. Using SIMD speeds up the performance, depending on the implementation of the operations with SIMD.
 
-- Which points are important to speed up index structures for modern systems:\\
-$\rightarrow$ Decrease branch and cache misses\\
-$\rightarrow$ Fully use cache/SIMD lines, aligning blocks?\\
-$\rightarrow$ Compare more keys, Save space with compression?\\
-$\rightarrow$ Use SIMD for tree traverse, k-ary search?\\
-$\rightarrow$ Adapted search algorithm compared to linear search?\\
+% Important issues
+After comparing the adapted index structures, we extract the following issues to speed up the performance of index structures in modern database systems:
+\begin{itemize}
+	\item Decrease branch and cache misses within tree traversal
+	\item Aligning and blocking of nodes of the index structure for better cache line usage
+	\item Compare as many keys as possible in parallel with SIMD instructions
+	\item Compress keys and nodes of the index structure to compare more keys in parallel
+	\item Decrease the number of compared keys using adapted search strategies like k-ary search
+\end{itemize}
 
 In Table 2, we show what index structures implements which of the performance issues.
-\begin{table*}[htbp]
-	\caption{Considered adaptions of index structures and the extracted points to increase the performance}
-	\begin{center}
-		\begin{tabular}{|c|c|c|c|c|}
-			\hline
-			\textbf{Name of extracted performance issue}&\textbf{Seg-Tree/Trie}&\textbf{FAST}&\textbf{ART}&\textbf{VAST}\\
-			\hline
-			Decrease branch and cache misses & - & x & - & x\\
-			Full use of cache line using blocking and alignment & - & x & o & x\\
-			Using SIMD to compare multiple keys in parallel & x & x & x & x\\
-			Save space and cache line bandwidth using compression & o & - & x & x\\
-			Adapted search algorithm compared to linear search & x & - & - & -\\
-			\hline
-			Legend: x: implements the issue, o: partially implements the issue, -: not implements the issue & & & &\\
-			\hline
-		\end{tabular}
-		\label{tab1}
-	\end{center}
-\end{table*}
 
 - Weighting of important points, descending\\
 $\rightarrow$ Keep keys as small as possible because comparing keys in parallel leads to direct performance speed up\\
