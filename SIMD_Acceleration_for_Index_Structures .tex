@@ -53,7 +53,7 @@ All approaches use SIMD only for key comparison within tree traversal and try to
 \begin{itemize}
 	\item We compare different adaptions of index structures to fulfill requirements of modern database systems
 	\item We highlight the usage of SIMD and the cache line adaptions in all approaches
-	\item We present the important points of these adaptions and their performance impact on the index structures
+	\item We extract the important points of these adaptions and their performance impact on the index structures
 \end{itemize}
 % Paper structure
 We organized the rest of the paper as follows. In Section 2, we give the preliminaries for SIMD in general and for the use in index structures. In Section 3, we analyse the different approaches of adapted index structures and evaluate the comparison in Section 4. In Section 5, we name related work. In Section 6, we present our conclusion und describe future work in Section 7. 
@@ -261,19 +261,39 @@ To compare as less keys as possible within one node to find the matching childre
 Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST [5] and ART [4] to FAST and show the performance increase. 
 
 \section{Conclusion}
-In this work, we compare adapted index structures for modern database systems and discuss the usage of SIMD within these. We present important points of these adaptions and show their impact on the performance of the index structures. 
-Index structures which were designed for disk-based memory database systems does not fulfill the requirements of modern database systems. Due to in-memory database systems, the IO-bottleneck moves from disk to RAM to RAM to cache. Furthermore, not only the number of CPU cycles restricts the performance, also cache and branch misses have an important impact of performance. 
+% Say what you say before you say it
+In this work, we compare adapted index structures for modern database systems and discuss the usage of SIMD within these. We extract important issues of these adaptions and show their impact on the performance of the index structures. 
 
-$\rightarrow$ Using SIMD speeds up the performance, depending on the implementation of the operations with SIMD
+% What changes
+Index structures which were designed for disk-based memory database systems does not fulfill the requirements of modern database systems. Due to in-memory database systems, the IO-bottleneck moves from disk to RAM further to RAM to cache. Furthermore, not only the number of CPU cycles restricts the performance, also cache and branch misses have an important impact of performance. Modern CPUs provide multiple SIMD registers and instructions to process multiple data items in parallel. Using SIMD speeds up the performance, depending on the implementation of the operations with SIMD.
 
 - Which points are important to speed up index structures for modern systems:\\
-$\rightarrow$ Decrease Branch/TLB/Cache misses\\
+$\rightarrow$ Decrease branch and cache misses\\
 $\rightarrow$ Fully use cache/SIMD lines, aligning blocks?\\
-$\rightarrow$ Save space with compression, compare more keys\\
-$\rightarrow$ Use SIMD for tree traverse, k-ary search\\
+$\rightarrow$ Compare more keys, Save space with compression?\\
+$\rightarrow$ Use SIMD for tree traverse, k-ary search?\\
+$\rightarrow$ Adapted search algorithm compared to linear search?\\
 
-- Table of entries that improve performance and space consumption and mark which structure implement the entry\\
-- entries: \\\\
+In Table 2, we show what index structures implements which of the performance issues.
+\begin{table*}[htbp]
+	\caption{Considered adaptions of index structures and the extracted points to increase the performance}
+	\begin{center}
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			\textbf{Name of extracted performance issue}&\textbf{Seg-Tree/Trie}&\textbf{FAST}&\textbf{ART}&\textbf{VAST}\\
+			\hline
+			Decrease branch and cache misses & - & x & - & x\\
+			Full use of cache line using blocking and alignment & - & x & o & x\\
+			Using SIMD to compare multiple keys in parallel & x & x & x & x\\
+			Save space and cache line bandwidth using compression & o & - & x & x\\
+			Adapted search algorithm compared to linear search & x & - & - & -\\
+			\hline
+			Legend: x: implements the issue, o: partially implements the issue, -: not implements the issue & & & &\\
+			\hline
+		\end{tabular}
+		\label{tab1}
+	\end{center}
+\end{table*}
 
 - Weighting of important points, descending\\
 $\rightarrow$ Keep keys as small as possible because comparing keys in parallel leads to direct performance speed up\\
