@@ -53,7 +53,7 @@ All approaches use SIMD only for key comparison within tree traversal and try to
 \begin{itemize}
 	\item We compare different adaptions of index structures to fulfill requirements of modern database systems
 	\item We highlight the usage of SIMD and the cache line adaptions in all approaches
-	\item We show opportunities for adaption for other approaches to use SIMD
+	\item We present the important points of these adaptions and their performance impact on the index structures
 \end{itemize}
 % Paper structure
 We organized the rest of the paper as follows. In Section 2, we give the preliminaries for SIMD in general and for the use in index structures. In Section 3, we analyse the different approaches of adapted index structures and evaluate the comparison in Section 4. In Section 5, we name related work. In Section 6, we present our conclusion und describe future work in Section 7. 
@@ -260,36 +260,33 @@ To compare as less keys as possible within one node to find the matching childre
 % Comparison of adapted index structures
 Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST [5] and ART [4] to FAST and show the performance increase. 
 
-%TODO: Add related work:
-%\begin{itemize}
-%	\item GPU and SIMD
-%	\item Other tree structures, T-Tree, CSB-Tree, HAT-Tree, KISS-Tree
-%\end{itemize}
-
-%\begin{itemize}
-%	\item MainMemory Index Structures with Fixed Size Partial Keys, looking at tries
-%	\item Rethinking SIMD Vectorization for In-Memory Databases
-%	\item Implementing Database Operations Using SIMD Instructions, comparison of SIMD vs vector processing, other db operations Ref: D. R. Morrison, “PATRICIA-practical algorithm to retrieve information coded in alphanumeric,” J. ACM, vol. 15, no. 4, 1968.
-%	\item k-ary search: B. Schlegel, R. Gemulla, and W. Lehner, “k-ary search on modern	processors,” in DaMoN workshop, 2009.
-%	\item ART and VAST compare to FAST
-%	\item better cache line behaviour of B+ trees Ref: J. Rao and K. A. Ross. Cache conscious indexing for decision support in main	memory. In VLDB, pages 78–89, 1999.
-%	\item Efficient cache line usage with compression Ref: M. Zukowski, S. Heman, N. Nes, and P. Boncz. Super-scalar ram-cpu cache	compression. In ICDE, page 59, 2006.
-%\end{itemize}
-
 \section{Conclusion}
+In this work, we compare adapted index structures for modern database systems and discuss the usage of SIMD within these. We present important points of these adaptions and show their impact on the performance of the index structures. 
+Index structures which were designed for disk-based memory database systems does not fulfill the requirements of modern database systems. Due to in-memory database systems, the IO-bottleneck moves from disk to RAM to RAM to cache. Furthermore, not only the number of CPU cycles restricts the performance, also cache and branch misses have an important impact of performance. 
+
+$\rightarrow$ Using SIMD speeds up the performance, depending on the implementation of the operations with SIMD
+
 - Which points are important to speed up index structures for modern systems:\\
-- Decrease Branch/TLB/Cache misses\\
-- Fully use cache/SIMD lines, aligning blocks?\\
-- Save space with compression, compare more keys\\
-- Use SIMD for tree traverse, k-ary search\\
+$\rightarrow$ Decrease Branch/TLB/Cache misses\\
+$\rightarrow$ Fully use cache/SIMD lines, aligning blocks?\\
+$\rightarrow$ Save space with compression, compare more keys\\
+$\rightarrow$ Use SIMD for tree traverse, k-ary search\\
+
 - Table of entries that improve performance and space consumption and mark which structure implement the entry\\
 - entries: \\\\
-- Weighting of important points
+
+- Weighting of important points, descending\\
+$\rightarrow$ Keep keys as small as possible because comparing keys in parallel leads to direct performance speed up\\
+$\rightarrow$ Save space with compression\\
+$\rightarrow$ Align and block the index structures for better cache line usage\\
+$\rightarrow$ Decrease branch misses like VAST do\\
+
 \section{Future work}
 \begin{itemize}
 	\item Using k-ary search in FAST/VAST
 	\item Looking in detail to the decrease of branch misses using addition/multiplication operations and SIMD
 	\item Another use of SIMD in index structures than search, other DB operations
+	\item Look at other SIMD techniques and parameters to increase performance
 \end{itemize}
 
 %Open questions, use SIMD for tree creation/updates instead of only for traversal
