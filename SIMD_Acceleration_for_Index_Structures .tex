@@ -243,20 +243,28 @@ At least, we consider the usage of SIMD with the GPU. Zeuch et al. and Changkyu 
 % B+ Tree adaptions, compression
 In main-memory database systems, a $B^+$-Tree does not fulfill the requirements of efficient cache line usage. Rao et al. show improved cache line usage for $B^+$-Trees [8]. Compression is used to decrease the index size to fill more keys into the cache line. Zukowski et al. show the performance increase of better cache line usage with compression [9]. 
 
+% Other adapted tree strucutures
+Graefe et al. present and summarize several techniques for improving cache performance for B-Trees [10]. Furthermore,
+Bender et al. show a cache oblivious B-Tree [11] and
+a cache oblivious B-Tree for string data types [12]. Other adapted index structures are shown by Rao et al., the Cache-Sensitive
+Search Trees (CSS-Tree) [8], and the Cache Sensitive $B^+$-Tree (CSB+-Trees) [14]. They construct the
+tree such that the keys are placed with the best cache optimization as possible in terms of spatial or temporal locality.
+
 % SIMD usage, vectorisation
-During the traversal of an index structure in modern database systems, a huge number of keys are compared. Consequently, using SIMD instructions leads to better search performance. Polychroniou et al. consider different techniques to process multiple data items with one SIMD instruction [7]. They differentiate between horizontal and vertical vector processing and present benefits of each approach. Morrison et al. show the implementations of database operations with SIMD and compare SIMD and scalar processing of data items [10].
- 
+During the traversal of an index structure in modern database systems, a huge number of keys are compared. Consequently, using SIMD instructions leads to better search performance. Polychroniou et al. consider different techniques to process multiple data items with one SIMD instruction [7]. They differentiate between horizontal and vertical vector processing and present benefits of each approach. Morrison et al. show the implementations of database operations with SIMD and compare SIMD and scalar processing of data items [10]. Zhou et al. examine the application of SIMD instruction
+to implement database operations [2]. They address sequential scans, aggregations, index operations, and joins.
+
 % k-ary search
-To compare as less keys as possible within one node to find the matching children, Zeuch et al. show the performance increase using k-ary search with SIMD instructions [3]. Schlegel et al. present the general benefits of k-ary search on modern processors [11]. 
+To compare as less keys as possible within one node to find the matching children, Zeuch et al. show the performance increase using k-ary search with SIMD instructions [3]. Schlegel et al. present the general benefits of k-ary search on modern processors [15]. 
 
 % Comparison of adapted index structures
 Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST [5] and ART [4] to FAST and show the performance increase. 
 
-TODO: Add related work:
-\begin{itemize}
-	\item GPU and SIMD
-	\item Other tree structures, T-Tree, CSB-Tree, HAT-Tree, KISS-Tree
-\end{itemize}
+%TODO: Add related work:
+%\begin{itemize}
+%	\item GPU and SIMD
+%	\item Other tree structures, T-Tree, CSB-Tree, HAT-Tree, KISS-Tree
+%\end{itemize}
 
 %\begin{itemize}
 %	\item MainMemory Index Structures with Fixed Size Partial Keys, looking at tries
@@ -275,7 +283,8 @@ TODO: Add related work:
 - Save space with compression, compare more keys\\
 - Use SIMD for tree traverse, k-ary search\\
 - Table of entries that improve performance and space consumption and mark which structure implement the entry\\
-- entries: \\
+- entries: \\\\
+- Weighting of important points
 \section{Future work}
 \begin{itemize}
 	\item Using k-ary search in FAST/VAST
@@ -296,6 +305,13 @@ on Modern CPUs and GPUs'' in SIGMOD’10, June 6-11, 2010, Indianapolis, Indiana
 \bibitem{b7}Orestis Polychroniou, Arun Raghavan and Kenneth A. Ross, ``Rethinking SIMD Vectorization for In-Memory Databases'' in SIGMOD’15, May 31-June 4, 2015, Melbourne, Victoria, Australia.
 \bibitem{b8} J. Rao and K. A. Ross ``Cache conscious indexing for decision support in main memory'' in VLDB, pages 78-89, 1999.
 \bibitem{b9}  M. Zukowski, S. Heman, N. Nes, and P. Boncz. ``Super-scalar ram-cpu cache compression'' in ICDE, page 59, 2006.
+\bibitem{b10} G. Graefe and P.-A. Larson. ``B-tree indexes and cpu
+caches'' in ICDE, 2001.
+\bibitem{b11} M. A. Bender, E. D. Demaine, and M. Farach-Colton. ``Cache-oblivious b-trees'' in FOCS, 2000.
+\bibitem{b12} M. A. Bender, M. Farach-Colton, and B. C. Kuszmaul.
+``Cache-oblivious string b-trees'' in PODS, 2006.
+\bibitem{b13} J. Rao and K. A. Ross. ``Making $B^+$-Trees cache conscious in main memory'' n SIGMOD, 2000.
+\bibitem{b14} B. Schlegel, R. Gemulla, and W. Lehner, ``K-ary search on modern processor'' in DaMoN workshop, 2009.
 \end{thebibliography}
 
 \end{document}
