@@ -144,13 +144,32 @@ Changkyu et al. present implementations for building and traversing the tree ada
 Changkyu et al. consider the search performance as queries per second. The CPU search performance on the Core i7 with 64M 32-bit (key, rowID) pairs is 5X faster than the best reported number [8 TODO ref], resulting in a throughput of 50M search queries per second. The GPU search on the GTX 280 is around 1.7X faster than the best reported number, resulting in 85M search queries per second. Considering larger index structures, the GPU performance increase exceeds the CPU performance increase, because TLB and cache misses grow up and the CPU search becomes memory bandwidth bound.
 
 % Mention Compression?
+\subsection{VAST}\label{SCM}
+% What is from FAST
+Yamamuro et al. extended FAST building an index structure called Vector-Advanced and Compressed Structure Tree (VAST) [5]. They adapt the blocking and aligning structure of FAST and add compression of nodes along with improved SIMD usage. In Figure 5, we show the structure of the VAST-Tree including layers and different blocking elements. The top layer $P_{32}$ uses the techniques of FAST with the same SIMD, cache line and page blocking with 32 bit keys.
+
+% Block compression
+In order to decrease the size of the index structure to better fit into main memory, the middle and bottom layers use compressed nodes. In the layer $P_{16}$, the 32 bit keys of each node are compressed to 16 bit keys using lossy compression. Analogue, in $P_8$ the keys are compressed to 8 bit with lossy compression. In the leaf nodes Yamamuro et al. decrease the node size with the lossless compression algorithm \emph{P4Delta}, which results in a good balance between compression ratio and decompression speed. If an error occurs due to information loss, they present an algorithm for error correction.
+
+% SIMD usage
+Along with the other considered index structures, Yamamuro et al. compare multiple keys to one search key with SIMD in the tree traversal. Due to the key compression of nodes, the VAST-Tree compares more keys in parallel than FAST. Additionally, they reduce branch misses with an adapted SIMD usage. They use addition and multiplication operations on the results of a SIMD key comparison, instead of if-then paths, to find the next node in tree traversal.
+
+% Performance
+Due to lossy and lossless compression of the majority of nodes, Yamamuro et al. reach a 95\% less space consumption of the VAST-Tree compared to a binary tree or FAST. We consider an index with $2^{32}$ keys. They reach up to $6.0$ and $1.24$ times performance increase compared to a binary tree and FAST. Although errors occur due to lossy compression, the error correction does not take a major influence on the traversal speed.
+
+\begin{figure}
+	\includegraphics[width=0.5\textwidth]{figure_5.png}
+	\caption{An overview of VAST-Tree. The top layer ($P_{32}$) of VAST-Tree uses FAST techniques, and VAST-Tree compresses the middle and the bottom layers ($P_{16}$ and $P_8$) of the trees. Moreover, keys in leaf nodes ($key_1, key_2, ...,	key_N$) are compressed by using lossless compression. Adapted from Yamamuro et al. [5].}
+	\label{fig}
+\end{figure}
+
 
 \subsection{ART}\label{SCM}
 % Basics about radix tree
 Leis et al. adapted a radix tree for efficient indexing in main-memory database systems called Adaptive Radix Tree [4]. The height of a radix tree depends on the chunk size of the keys stored in each node, ART divides keys into 8-bit chunks. They differentiate between inner nodes and leaf nodes and adapt each of them in a different way.
 
 % Adaption of inner nodes
-Instead of using a constant node size for each inner node, they present four types of nodes with different numbers of keys and children. The types of nodes, sorted ascending by their size, are \emph{Node4}, \emph{Node16}, \emph{Node48}, and \emph{Node256}. When the capacity of a node is exhausted due to insertion, it is replaced by a larger node type. When a node becomes underfull due to key removal, it is replaced by a smaller node type. In Figure 4, we show these node types containing keys that are mapped to subtrees.
+Instead of using a constant node size for each inner node, they present four types of nodes with different numbers of keys and children. The types of nodes, sorted ascending by their size, are \emph{Node4}, \emph{Node16}, \emph{Node48}, and \emph{Node256}. When the capacity of a node is exhausted due to insertion, it is replaced by a larger node type. When a node becomes underfull due to key removal, it is replaced by a smaller node type. In Figure 5, we show these node types containing keys that are mapped to subtrees.
 
 % Inner node types
 \textbf{Node4}: The smallest node type consists of one array with up to four sorted keys and another array with up to four children. The keys and pointers are stored at corresponding positions.
@@ -171,31 +190,14 @@ According to FAST and Seg-Tree, Leis et al. use SIMD within the tree traversal. 
 In contrast to FAST and Seg-Tree, the goal of ART is also to reduce space consumption. Leis et al. use lazy expansion and path compression. The first technique, lazy expansion, is to create inner nodes only if they are required to distinguish at least two leaf nodes. The second technique, path compression, removes all inner nodes that have only one child.
 
 % Performance increase
-Since SIMD is only used in the tree search, we don't consider the performance increases of ART in insert and update operations. Leis et al. show, that looking up random keys using ART is faster than Seg-Tree and FAST, because ART has less cache misses and less CPU cycles per comparison. They consider the performance increases for dense and sparse keys, whereas ART works better with dense keys. Also they show that a span of 8 results in better performance than a smaller span. 
+Since SIMD is only used in the tree search, we do not consider the performance increases of ART in insert and update operations. Leis et al. show, that looking up random keys using ART is faster than Seg-Tree and FAST, because ART has less cache misses and less CPU cycles per comparison. They consider the performance increases for dense and sparse keys, whereas ART works better with dense keys. Also they show that a span of 8 results in better performance than a smaller span. 
 
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{figure_4.png}
 	\caption{Inner nodes of ART. The partial keys 0, 2, 3, and 255 are mapped to the subtrees a, b, c, and d. Adapted from Leis et al. [4].}
 	\label{fig}
 \end{figure}
-\subsection{VAST}\label{SCM}
-% What is from FAST
-Yamamuro et al. extended FAST building an index structure called Vector-Advanced and Compressed Structure Tree (VAST) [5]. They adapt the blocking and aligning structure of FAST and add compression of nodes along with improved SIMD usage. In Figure 5, we show the structure of the VAST-Tree including layers and different blocking elements. The top layer $P_{32}$ uses the techniques of FAST with the same SIMD, cache line and page blocking with 32 bit keys.
 
-% Block compression
-In order to decrease the size of the index structure to better fit into main memory, the middle and bottom layers use compressed nodes. In the layer $P_{16}$ the 32 bit keys of each node are compressed to 16 bit keys using lossy compression. Analogue, in $P_8$ the keys are compressed to 8 bit with lossy compression. In the leaf nodes Yamamuro et al. decrease the node size with the lossless compression algorithm \emph{P4Delta}, which a good balance between compression ratio and decompression speed. If an error occurs due to information loss, they present an algorithm for error correction.
-
-% SIMD usage
-Along with the other considered index structures, Yamamuro et al. compare multiple keys to one search key with SIMD in the tree traversal. Due to the key compression of nodes, the VAST-Tree compares more keys in parallel than FAST. Additionally, they reduce branch misses with an adapted SIMD usage. They use addition and multiplication operations on the results of a SIMD key comparison, instead of if-then paths, to find the next node in tree traversal.
-
-% Performance
-Due to lossy and lossless compression of the majority of nodes, Yamamuro et al. present a 95\% less space consumption of the VAST-Tree compared to a binary tree or FAST. We consider an index with $2^{32}$ keys. They reach up to $6.0$ and $1.24$ times performance increase compared to a binary tree and FAST. Although errors occur due to lossy compression, the error correction does not take a major influence on the traversal speed.
-
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{figure_5.png}
-	\caption{An overview of VAST-Tree. The top layer ($P_{32}$) of VAST-Tree uses FAST techniques, and VAST-Tree compresses the middle and the bottom layers ($P_{16}$ and $P_8$) of the trees. Moreover, keys in leaf nodes ($key_1, key_2, ...,	key_N$) are compressed by using lossless compression. Adapted from Yamamuro et al. [5].}
-	\label{fig}
-\end{figure}
 
 \section{Evaluation}
 % What we want to do:
@@ -208,13 +210,13 @@ In this section, we compare the adaptions made in Seg-Tree, FAST, ART, and VAST 
 \end{itemize}
 
 % Small keys, to compare more in parallel
-Before looking at the differences, we go into detail for each entry of the list. At first, keeping the key size as small as possible speeds up the search performance, because more keys can be compared with a single SIMD instruction. Additionally, the smaller the keys are, the more keys fit into the cache line. Since tries or radix trees, depending on their span, have small chunks of the search key in each node, SIMD speeds up the comparison performance by a considerable factor. If keys are stored completely in one node, like in Seg-Tree and FAST, Yamamuro et al. show that compression of keys results in better search performance [5].
+Before looking at the differences, we go into detail for each entry of the list. At first, keeping the key size as small as possible speeds up the search performance, because more keys can be compared with a single SIMD instruction. Additionally, the smaller the keys are, the more keys fit into a cache line. Since tries or radix trees, depending on their span, have small chunks of the search key in each node, SIMD speeds up the comparison performance by a considerable factor. If keys are stored completely in one node, like in Seg-Tree and FAST, Yamamuro et al. show that compression of keys results in better search performance [5].
 
 % Segmenting the tree
 Secondly, all index structures are adapted to better use SIMD and cache lines. Zeuch et al. linearise keys to a multiple of the SIMD bandwidth with the Seg-Tree, Changkyu et al. segmented FAST into SIMD, cache, and page blocks. Leis et al. use the node type \emph{Node16} containing 16 keys that are compared in parallel with one SIMD instruction. 
 
 % SIMD usage
-At least, we consider the usage of SIMD of the index structures. Segmenting the index structure is important to reach a better performance increase with SIMD instructions. Since the data for a SIMD operation has to be stored sequentially in main memory, a good segmenting and blocking strategy is necessary. In Section 2, we present the vertical vectorization as alternative to horizontal vectorization. Due to the necessary of sequential store of the data in main memory, comparing a different search key per vector lane is not applicable for SIMD instructions in tree traversal. Therefore, all considered adaptions use horizontal vectorization. 
+At last, we consider the usage of SIMD of the index structures. Segmenting the index structure is important to reach a better performance increase with SIMD instructions. Since the data for a SIMD operation has to be stored sequentially in main memory, a good segmenting and blocking strategy is necessary. In Section 2, we present the vertical vectorization as alternative to horizontal vectorization. Due to the necessity of sequential data storage in main memory, comparing a different search key per vector lane is not applicable for SIMD instructions in tree traversal. Therefore, all considered adaptions use horizontal vectorization. 
 
 % Decreasing Branch misses with addition/multiplication operations
 The traversal speed also depends on the evaluation of a comparison with SIMD operations. Changkyu et al. use if-then paths to evaluate the bitmask of a SIMD comparison, which leads to more branch misses compared to the approach of Yamamuro et al. They perform addition and multiplication operations on the bitmask to avoid branch misses for better search performance.
@@ -253,10 +255,10 @@ Furthermore, we present the following differences in the adaptions of the index 
 We presented above that compression leads to better search performance and less space consumption. Anyway, different compression approaches are used by the index structures. We consider two compression techniques, block and path compression. Yamamuro et al. use lossy block compression to decrease the key size of blocks. Consequently, they compare more keys with one SIMD instruction, whereas performance decrease of the occurring errors is smaller than the performance increase of the compression. Instead of compressing blocks, Seg-Trie and ART use path compression to decrease the tree height. Consequently, less nodes are passed to reach the matching leaf node, if it exists.
 
 % Read-Only vs Read-Write
-Since all considered index structures use SIMD only for tree traversal, Zeuch et al. and Changkyu et al. present the Seg-Tree/Trie and FAST as read-only, which means the don't show adapted update or delete operations. For statistical usage or data warehouses, update and delete operations are not required and read-only index structures serve the purpose. To fulfill the requirements of general index structures, Leis et al. and Yamamuro et al. also present update and delete operations for ART and VAST. Both using the performance increase of tree traversal with SIMD for these operations, because the matching node for the search key has to be found in the tree.
+Since all considered index structures use SIMD only for tree traversal, Zeuch et al. and Changkyu et al. present the Seg-Tree/Trie and FAST as read-only, which means they do not show adapted update or delete operations. For statistical usage or data warehouses, update and delete operations are not required and read-only index structures serve the purpose. To fulfill the requirements of general index structures, Leis et al. and Yamamuro et al. also present update and delete operations for ART and VAST. Both using the performance increase of tree traversal with SIMD for these operations, because the matching node for the search key has to be found in the tree.
 
 % GPU calculation, cache line usage becomes different impact, completely different technology
-At least, we consider the usage of SIMD with the GPU. Zeuch et al. and Changkyu et al. present algorithms to use GPU calculation for the Seg-Tree/Trie [3]. They compare one search key against multiple other keys with SIMD registers in the GPU, analogue to CPU usage. Since passing data to GPU registers is completely different compared to CPU registers and the other index structures only use the CPU, we don't go further into details of CPU calculation with SIMD. \textbf{TODO: References for SIMD with GPU?}
+At last, we consider the usage of SIMD with the GPU. Zeuch et al. and Changkyu et al. present algorithms to use GPU calculation for the Seg-Tree/Trie [3]. They compare one search key against multiple other keys with SIMD registers in the GPU, analogue to CPU usage. Since passing data to GPU registers is completely different compared to CPU registers and the other index structures only use the CPU, we do not go further into details of CPU calculation with SIMD. \textbf{TODO: References for SIMD with GPU?}
 
 \section{Related Work}
 % B+ Tree adaptions, compression
