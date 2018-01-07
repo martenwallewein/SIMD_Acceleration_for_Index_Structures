@@ -208,11 +208,11 @@ Since SIMD is only used in the tree search, we do not consider the performance i
 			\textbf{Name of extracted performance issue}&\textbf{Seg-Tree/Trie}&\textbf{FAST}&\textbf{ART}&\textbf{VAST}\\
 			\hline
 			Horizontal vectorization & x & x & x & x\\
-			Minimize key size & o & - & x & x\\
-			Adapt node sizes and types & - & x & - & x\\
-			Decrease branch and cache misses & - & x & - & x\\
+			Minimized key size & o & - & x & x\\
+			Adapted node sizes and types & - & x & - & x\\
+			Decreased branch misses & - & x & - & x\\
 			Full use of cache line using blocking and alignment & - & x & o & x\\
-			Save space and cache line bandwidth using compression & o & - & x & x\\
+			Compression & o & - & x & x\\
 			Adapt search algorithm for linearised nodes & x & - & - & -\\
 			\hline
 			Legend: x: implements the issue, o: partially implements the issue, -: not implements the issue & & & &\\
@@ -226,12 +226,13 @@ In this section, we define criteria to compare the adaptions made in Seg-Tree, F
 In Table 2, we show the performance criteria and show which index structure implements which of the criteria. In the following, we consider each criterium in detail before summarizing the comparison. For each criteria, we show how the index structure implements it. If the index structure does not implement the criteria, we consider if it is possible to implement it. Furthermore, we constitute why the adaptions can not compared directly in view of performance.
 
 \subsection{Horizontal Vectorization}
+% Reason for the performance issue
 Segmenting the index structure is important to reach a better performance increase with SIMD instructions. Since the data for a SIMD operation has to be stored sequentially in main memory, a good segmenting and blocking strategy is necessary. In Section 2, we present the vertical vectorization as alternative to horizontal vectorization. Due to the necessity of sequential data storage in main memory, comparing a different search key per vector lane is not applicable for SIMD instructions in tree traversal. All considered adaptions use horizontal vectorization in search operation for a single search key in the index structure.
 
 % Decreasing Branch misses with addition/multiplication operations
 The search performance also depends on the evaluation of a comparison with SIMD operations. Changkyu et al. and Zeuch et al. use conditional branches (if-then paths) within their search algorithms, which leads to more branch misses compared to the approach of Yamamuro et al. They perform addition and multiplication operations on the bitmask to avoid branch misses for better search performance. This approach can also be applied on Seg-Tree/Trie and ART to reduce branch misses.
 
-\subsection{Minimize key size}
+\subsection{Minimized key size}
 %- Zeuch et al. small key sizes for Seg-Tree, Art small chunks and VAST uses compression.
 % Reason for the performance issue
 Minimizing the key size as much as possible speeds up the search performance, because more keys can be compared with a single SIMD instruction. Additionally, the smaller the keys are, the more keys fit into a cache line. Since tries or radix trees, depending on their span, have small chunks of the search key in each node, SIMD speeds up the comparison performance by a considerable factor.  
@@ -239,13 +240,12 @@ Minimizing the key size as much as possible speeds up the search performance, be
 % Seg-Tree/Trie and ART
 Zeuch et al. minimize the key size for the Seg-Trie using a small chunk size. This leads to a bigger tree height, but the performance increase of comparing more keys in parallel leads to better search performance. For the Seg-Tree, they do not use adaptions to minimize the key size, therefore the performance increase with SIMD depends on the size of the used data type. Analogue to the Seg-Trie, Leis et al. use a small key size for ART to increase the performance speed up.
 
-
 % FAST and VAST
 Changkyu et al. do not minimize the key size for FAST, therefore the performance increase with SIMD also depends on the size of the used data type.Yamamuro et al. use compression to minimize the key size of VAST, respectively to the layer. Since VAST is an extended Version of FAST, there is no need to check if this adaption is also applicable for FAST. 
 
 %If keys are stored completely in one node, like in Seg-Tree and FAST, Yamamuro et al. show that compression of keys results in better search performance [5]. Zeuch et al. show
 
-\subsection{Adapt node sizes and types}
+\subsection{Adapted node sizes and types}
 % Reason for the performance issue
 Index structures for disk-based database systems often adapt their node size to the page size of disk. In modern database systems, this adaption becomes obsolete. Consequently, the considered index structures adapt their node to other parameters. 
 
@@ -253,29 +253,65 @@ Index structures for disk-based database systems often adapt their node size to 
 Zeuch et al. adapted the $B^+$-Tree by having a k-ary search tree as each inner node. To perform k-ary search on the keys of a node, each node has the size of multiple of the SIMD-bandwidth $k$.
 
 % FAST and VAST
-Changkyu et al. segment FAST into SIMD, cache, and page blocks. Each block contains multiple nodes, respectively to the block size. Since FAST is based on binary tree, every node contains still a single element and is not adapted in type or size. VAST uses the same hierarchical blocking, but also does not adapt single nodes.
+Changkyu et al. segment FAST into SIMD, cache, and page blocks. Each block contains multiple nodes, respectively to the block size. Since FAST is based on binary tree, every node contains still a single element and is not adapted in type or size. VAST uses the same hierarchical blocking and also does not adapt single nodes.
 
-Leis et al. present different node types for ART. 
-%- Seg-Tree/Trie: K-ary search tree as inner nodes\\
-%- ART: Different node types\\
-%- FAST: Blocks, but not sure if adapted node types\\
-%- VAST: same as FAST\\
+% ART
+Leis et al. present different node types for inner nodes of ART. The node types differ in the number of keys and child nodes. 
+
+\subsection{Decreased branch misses}
+% Reason for the performance issue
+Evaluating the result of a comparison with SIMD using conditional branches can lead to branch misses, if the CPU prefetches the wrong branch. Consequently, decreasing branch misses improves search performance because less CPU cycles are needed. Yamamuro et al. use addition and multiplication operations in VAST to find the next node in their evaluation of the comparison result. This avoids conditional branching and therefore decreases branch misses.
+
+% Seg-Tree and Seg-Trie
+Zeuch et al. use conditional branches in their search algorithms for the Seg-Tree and Seg-Trie, which can be replaced by the approach of VAST to decrease branch misses. Analogue, ART can be adapted using this approach to speed up the search performance.
 \subsection{Full use of cache line using blocking and alignment}
-Secondly, all index structures are adapted to better use SIMD and cache lines. Zeuch et al. linearise keys to a multiple of the SIMD bandwidth with the Seg-Tree, Changkyu et al. segmented FAST into SIMD, cache, and page blocks. Leis et al. use the node type \emph{Node16} containing 16 keys that are compared in parallel with one SIMD instruction. 
-\subsection{Save space and cache line bandwidth using compression}
-% Usage and type of compression
-We presented above that compression leads to better search performance and less space consumption. Anyway, different compression approaches are used by the index structures. We consider two compression techniques, block and path compression. Yamamuro et al. use lossy block compression to decrease the key size of blocks. Consequently, they compare more keys with one SIMD instruction, whereas performance decrease of the occurring errors is smaller than the performance increase of the compression. Instead of compressing blocks, Seg-Trie and ART use path compression to decrease the tree height. Consequently, less nodes are passed to reach the matching leaf node, if it exists.
-\subsection{Adapt search algorithm for linearised nodes}
-- Zeuch et al. k-ary search. \\
-- With O(logn) less keys are compared to linear search\\
-- Other index structures does not use this approach\\
-- Could speed up FAST or ART, see future work
-\subsection{Summary}
-% Performance comparison
-Additionally, we consider the performance of the adapted index structures. The performance increases highly depend on the underlying hardware, the data types chosen for the keys, and the amount of keys inserted in the index structure. Therefore, comparing all structures directly does not lead to reasonable results. Although, Yamamuro et al. and Leis et al. compare the VAST-Tree [5] and ART [4] to FAST, they only consider specific key sizes and data types. 
+% Reason for the performance issue
+Due to in-memory database systems, the IO-bottleneck moves from disk to RAM further to RAM to cache. Consequently, an efficient cache line usage is important to speed up the performance of index structures. An efficient cache line usage is reached by blocking parts of index structures to cache line size.
 
-% GPU calculation, cache line usage becomes different impact, completely different technology
-At last, we consider the usage of SIMD with the GPU. Zeuch et al. and Changkyu et al. present algorithms to use GPU calculation for the Seg-Tree/Trie [3]. They compare one search key against multiple other keys with SIMD registers in the GPU, analogue to CPU usage. Since passing data to GPU registers is completely different compared to CPU registers and the other index structures only use the CPU, we do not go further into details of CPU calculation with SIMD. \textbf{TODO: References for SIMD with GPU?}
+% Seg-Tree/Trie
+Zeuch et al. linearise keys to a multiple of the SIMD bandwidth with the Seg-Tree but not adapt the node size to the cache line size. Accordingly, an adaption of the inner nodes of Seg-Tree to the cache line size could lead to better cache line usage and consequently to better search performance. 
+
+% Fast and VAST
+Changkyu et al. segmented FAST into SIMD, cache, and page blocks. They highly optimize FAST for efficient cache line usage by blocking the index structure into blocks with the size of a cache line.
+
+% ART
+Leis et al. also do not make adaptions of ART in view of blocking to the cache line size. Thus, a performance increase can be reached by adapting ART to cache line size.
+\subsection{Compression}
+% Usage and type of compression
+Along with the fast growing amount of data stored in modern database systems, the size of index structures grows fast. Compression of nodes decreases the size of index structures. Key compression leads to better search performance with SIMD, because more keys are compared in parallel.
+
+%Seg-Tree and FAST
+Zeuch et al. do not use any node or key compression for Seg-Tree. Changkyu et al. also do not compress nodes or keys in FAST. Consequently, considering compression for Seg-Tree and FAST provides space for additional performance increase.
+
+% VAST
+Yamamuro et al. use lossy block compression to decrease the key size of blocks. Consequently, they compare more keys with one SIMD instruction, whereas performance decrease of the occurring errors is smaller than the performance increase of the compression. Instead of compressing blocks, Seg-Trie and ART use path compression to decrease the tree height. Consequently, less nodes are passed to reach the matching leaf node, if it exists.
+
+% ART
+Leis et al. use path compression within ART. Path compression removes all inner nodes that have only one child to decrease the tree height and therefore increase search performance. Key compression is a possible adaption for ART to improve the search performance.
+
+\subsection{Adapt search algorithm for linearised nodes}
+% Reason for the performance issue
+Searching children in nodes with many keys can be speeded up with adapted search algorithm compared to linear search.
+
+% Seg-Tree and Seg-Trie
+Zeuch et al. introduce k-ary search for the Seg-Tree and Seg-Trie, which performs in $O(log_n)$ compared to $O(n)$ of linear search, where $k$ is the SIMD bandwidth. Consequently, less keys are compared in one node, whereas a linearised store of the keys in the node is required. 
+
+% FAST, ART 
+For FAST and VAST, the k-ary search is not applicable because they are adapted from binary trees and have only one key in each node. Leis et al. use linear search in their adapted nodes of ART to find children. For node type \emph{Node256} k-ary search can speed up finding the correct child node. Therefore ART provides space to use k-ary search for this node type.
+
+%- Zeuch et al. k-ary search. \\
+%- With O(logn) less keys are compared to linear search\\
+%- Other index structures does not use this approach\\
+%- Could speed up FAST or ART, see future work
+\subsection{Summary}
+- Commons and differences\\
+- Conclusion: Maybe weighting the points
+
+% Performance comparison
+Additionally, we compare the performance of the adapted index structures. The performance increases highly depend on the underlying hardware, the data types chosen for the keys, and the amount of keys inserted in the index structure. Therefore, comparing all structures directly does not lead to reasonable results. Although, Yamamuro et al. and Leis et al. compare the VAST-Tree [5] and ART [4] to FAST, they only consider specific key sizes and data types. 
+
+% GPU calculation, cache line usage becomes different impact, completely different technology%
+%At last, we consider the usage of SIMD with the GPU. Zeuch et al. and Changkyu et al. present algorithms to use GPU calculation for the Seg-Tree/Trie [3]. They compare one search key against multiple other keys with SIMD registers in the GPU, analogue to CPU usage. Since passing data to GPU registers is completely different compared to CPU registers and the other index structures only use the CPU, we do not go further into details of CPU calculation with SIMD. \textbf{TODO: References for SIMD with GPU?}
 % In Common:
 %\begin{itemize}
 %	\item Keep the key size as small as possible, to compare more keys in parallel
@@ -320,7 +356,7 @@ to implement database operations [2]. They address sequential scans, aggregation
 To compare as less keys as possible within one node to find the matching children, Zeuch et al. show the performance increase using k-ary search with SIMD instructions [3]. Schlegel et al. present the general benefits of k-ary search on modern processors [15]. 
 
 % Comparison of adapted index structures
-Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST [5] and ART [4] to FAST and show the performance increase. 
+Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST [5] and ART [4] to FAST and show a performance increase. 
 
 \section{Conclusion}
 % Say what you say before you say it
