@@ -304,11 +304,26 @@ For FAST and VAST, the k-ary search is not applicable because they are adapted f
 %- Other index structures does not use this approach\\
 %- Could speed up FAST or ART, see future work
 \subsection{Summary}
-- Commons and differences\\
-- Conclusion: Maybe weighting the points
+%- Commons and differences\\
+%- Conclusion: Maybe weighting the points
+
+After considering each performance criteria in detail, we summarize the comparison and weight the mentioned criteria according to their performance increase. 
+
+% Horizontal vectorization
+%Since the data for a SIMD operation has to be stored sequentially in main memory, all adapted index structures use horizontal vectorization to compare multiple keys in parallel, but use different approaches to evaluate the result of the SIMD comparison. 
+As mentioned before, comparing a different search key per vector lane is not applicable for SIMD instructions in tree traversal. Therefore, all considered adaptions use horizontal vectorization, but evaluate the result of the SIMD comparison in different ways. Since horizontal vectorization with SIMD, depending on the key size, leads to direct performance increase up to a multiple, we assign the highest weight to it. 
+
+% Minimize key size
+Due to the mentioned performance increase of horizontal vectorization, minimizing key size leads also leads to better search performance. We assign the second highest weight to minimizing the key size, since more keys are compared in parallel. Because of the compression of keys, VAST reaches the highest performance increase by minimizing key size compared to the other index structures. 
+
+% Cache line usage and branch misses
+Compared to horizontal vectorization and minimizing key size, an efficient cache line usage and avoiding branch misses lead to lesser performance increase. Although, both criteria decrease the number of CPU cycles, the performance increase does not reach a multiple of the needed performance. Therefore, we assign the third highest weight to efficient cache line usage and to avoiding branch misses.
+
+% Adapted node types and adapted search algorithm
+We assign the lowest weight to the adaption of nodes and to the usage of an adapted search algorithm. The adaption of nodes does not lead directly to performance increase, but is the basis for horizontal vectorization and efficient cache line usage. The usage of an adapted search algorithm, for example k-ary search, needs lesser compare steps. Nevertheless, it is not applicable for all of the considered index structures and it requires large node sizes to increase the performance.  
 
 % Performance comparison
-Additionally, we compare the performance of the adapted index structures. The performance increases highly depend on the underlying hardware, the data types chosen for the keys, and the amount of keys inserted in the index structure. Therefore, comparing all structures directly does not lead to reasonable results. Although, Yamamuro et al. and Leis et al. compare the VAST-Tree [5] and ART [4] to FAST, they only consider specific key sizes and data types. 
+\textbf{TODO: Skip this paragraph?}At last, we show why a direct performance comparison of the adapted index structures is not applicable. The performance increases highly depend on the underlying hardware, the data types chosen for the keys, and the amount of keys inserted in the index structure. Therefore, comparing all structures directly does not lead to reasonable results. Although, Yamamuro et al. and Leis et al. compare VAST \cite{b5} and ART \cite{b4} to FAST, they only consider specific key sizes and data types. 
 
 % GPU calculation, cache line usage becomes different impact, completely different technology%
 %At last, we consider the usage of SIMD with the GPU. Zeuch et al. and Changkyu et al. present algorithms to use GPU calculation for the Seg-Tree/Trie [3]. They compare one search key against multiple other keys with SIMD registers in the GPU, analogue to CPU usage. Since passing data to GPU registers is completely different compared to CPU registers and the other index structures only use the CPU, we do not go further into details of CPU calculation with SIMD. \textbf{TODO: References for SIMD with GPU?}
@@ -368,18 +383,20 @@ Index structures which were designed for disk-based memory database systems does
 % Important issues
 After comparing the adapted index structures, we extract the following issues to speed up the performance of index structures in modern database systems:
 \begin{itemize}
-	\item Decrease branch and cache misses within tree traversal
-	\item Aligning and blocking of nodes of the index structure for better cache line usage
-	\item Compare as many keys as possible in parallel with SIMD instructions
-	\item Compress keys and nodes of the index structure to compare more keys in parallel
-	\item Decrease the number of compared keys using adapted search strategies like k-ary search
+	\item Horizontal vectorization
+	\item Minimized key size
+	\item Adapted node sizes and types
+	\item Decreased branch misses
+	\item Full use of cache line using blocking and alignment
+	\item Compression
+	\item Adapt search algorithm for linearised nodes
 \end{itemize}
 
-- Weighting of important points, descending\\
-$\rightarrow$ Keep keys as small as possible because comparing keys in parallel leads to direct performance speed up\\
-$\rightarrow$ Save space with compression\\
-$\rightarrow$ Align and block the index structures for better cache line usage\\
-$\rightarrow$ Decrease branch misses like VAST do\\
+%- Weighting of important points, descending\\
+%$\rightarrow$ Keep keys as small as possible because comparing keys in parallel leads to direct performance speed up\\
+%$\rightarrow$ Save space with compression\\
+%$\rightarrow$ Align and block the index structures for better cache line usage\\
+%$\rightarrow$ Decrease branch misses like VAST do\\
 
 \section{Future work}
 \begin{itemize}
