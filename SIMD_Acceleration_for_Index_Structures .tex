@@ -235,7 +235,7 @@ The search performance also depends on the evaluation of a comparison with SIMD 
 \subsection{Minimized key size}
 %- Zeuch et al. small key sizes for Seg-Tree, Art small chunks and VAST uses compression.
 % Reason for the performance issue
-Minimizing the key size as much as possible speeds up the search performance, because more keys can be compared with a single SIMD instruction. Additionally, the smaller the keys are, the more keys fit into a cache line. Since tries or radix trees, depending on their span, have small chunks of the search key in each node, SIMD speeds up the comparison performance by a considerable factor.  
+Minimizing the key size as much as possible speeds up the search performance, because more keys can be compared with a single SIMD instruction. Additionally, the smaller the keys are, the more keys fit into a cache line. Since tries or radix trees, depending on their span, have small chunks of the search key in each node, more keys are compared in parallel.
 
 % Seg-Tree/Trie and ART
 Zeuch et al. minimize the key size for the Seg-Trie using a small chunk size. This leads to a bigger tree height, but the performance increase of comparing more keys in parallel leads to better search performance. For the Seg-Tree, they do not use adaptions to minimize the key size, therefore the performance increase with SIMD depends on the size of the used data type. Analogue to the Seg-Trie, Leis et al. use a small key size for ART to increase the performance speed up.
@@ -317,7 +317,7 @@ As mentioned before, comparing a different search key per vector lane is not app
 Due to the mentioned performance increase of horizontal vectorization, minimizing key size leads also leads to better search performance. We assign the second highest weight to minimizing the key size, since more keys are compared in parallel. Because of the compression of keys, VAST reaches the highest performance increase by minimizing key size compared to the other index structures. 
 
 % Cache line usage and branch misses
-Compared to horizontal vectorization and minimizing key size, an efficient cache line usage and avoiding branch misses lead to lesser performance increase. Although, both criteria decrease the number of CPU cycles, the performance increase does not reach a multiple of the needed performance. Therefore, we assign the third highest weight to efficient cache line usage and to avoiding branch misses.
+Compared to horizontal vectorization and minimizing key size, an efficient cache line usage and avoiding branch misses lead to lesser performance increase. Although, both criteria decrease the number of CPU cycles, the performance increase does not reach a multiple. Therefore, we assign the third highest weight to efficient cache line usage and to avoiding branch misses.
 
 % Compression
 Afterwards, we assign the fourth highest weight to the usage compression. With key compression, the performance increase of horizontal vectorization rises. Path compression decreases the height of index structures and consequently less nodes are passed during traversal. 
