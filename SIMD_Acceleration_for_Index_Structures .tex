@@ -357,24 +357,20 @@ We assign the lowest weight to the adaption of nodes and to the usage of an adap
 
 \section{Related Work}
 % B+ Tree adaptions, compression
-In main-memory database systems, a $B^+$-Tree does not fulfill the requirements of efficient cache line usage. Rao et al. show improved cache line usage for $B^+$-Trees [8]. Compression is used to decrease the index size to fill more keys into the cache line. Zukowski et al. show the performance increase of better cache line usage with compression [9]. 
+In main-memory database systems, a $B^+$-Tree does not fulfill the requirements of efficient cache line usage. Therefore, it is important to adapt $B^+$-Trees to efficient cache line usage. Rao et al. show improved cache line usage for $B^+$-Trees [8].  Compression is used to decrease the index size to fill more keys into the cache line. Zukowski et al. show the performance increase of better cache line usage with compression [9]. This adaption gives an alternative for us compared to the compression used in VAST.
 
 % Other adapted tree strucutures
 Graefe et al. present and summarize several techniques for improving cache performance for B-Trees [10]. Furthermore,
-Bender et al. show a cache oblivious B-Tree [11] and
-a cache oblivious B-Tree for string data types [12]. Other adapted index structures are shown by Rao et al., the Cache-Sensitive
-Search Trees (CSS-Tree) [8], and the Cache Sensitive $B^+$-Tree (CSB+-Trees) [14]. They construct the
-tree such that the keys are placed with the best cache optimization as possible in terms of spatial or temporal locality.
+Bender et al. show a cache oblivious B-Tree [11] and a cache oblivious B-Tree for string data types [12]. Other adapted index structures are shown by Rao et al., the Cache-Sensitive Search Trees (CSS-Tree) [8], and the Cache Sensitive $B^+$-Tree (CSB+-Trees) [14]. They construct the tree such that the keys are placed with the best cache optimization as possible in terms of spatial or temporal locality. Since we consider efficient cache line usage as an important criteria for modern index structures, these adaptions gave useful ideas to measure performance increase due to efficient cache line usage. 
 
 % SIMD usage, vectorization
-During the traversal of an index structure in modern database systems, a huge number of keys are compared. Consequently, using SIMD instructions leads to better search performance. Polychroniou et al. consider different techniques to process multiple data items with one SIMD instruction [7]. They differentiate between horizontal and vertical vector processing and present benefits of each approach. Morrison et al. show the implementations of database operations with SIMD and compare SIMD and scalar processing of data items [10]. Zhou et al. examine the application of SIMD instruction
-to implement database operations [2]. They address sequential scans, aggregations, index operations, and joins.
+During the traversal of an index structure in modern database systems, a huge number of keys are compared. Consequently, using SIMD instructions leads to better search performance. Polychroniou et al. consider different techniques to process multiple data items with one SIMD instruction [7]. They differentiate between horizontal and vertical vector processing and present benefits of each approach. We use this differentiation of vector processing for our comparison of SIMD usage.  
 
 % k-ary search
-To compare as less keys as possible within one node to find the matching children, Zeuch et al. show the performance increase using k-ary search with SIMD instructions [3]. Schlegel et al. present the general benefits of k-ary search on modern processors [15]. 
+To compare as less keys as possible within one node to find the matching children, Zeuch et al. show the performance increase using k-ary search with SIMD instructions [3]. Schlegel et al. present the general benefits of k-ary search on modern processors [15]. Since k-ary search leads to a considerable factor of lesser key comparisons for large nodes, we choose the usage of an adapted search algorithm as one of our performance criteria.
 
 % Comparison of adapted index structures
-Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST [5] and ART [4] to FAST and show a performance increase. 
+Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST [5] and ART [4] to FAST and show a performance increase. We consider this comparison to weight our performance criteria.
 
 \section{Conclusion and Future Work}
 
