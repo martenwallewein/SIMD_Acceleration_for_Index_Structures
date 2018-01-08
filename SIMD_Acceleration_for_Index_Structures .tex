@@ -211,8 +211,8 @@ Since SIMD is only used in the tree search, we do not consider the performance i
 			Minimized key size & o & - & x & x\\
 			Adapted node sizes and types & - & x & - & x\\
 			Decreased branch misses & - & x & - & x\\
-			Full use of cache line using blocking and alignment & - & x & o & x\\
-			Compression & o & - & x & x\\
+			Full use of cache line using blocking and alignment & - & x & - & x\\
+			Usage of Compression & o & - & x & x\\
 			Adapt search algorithm for linearised nodes & x & - & - & -\\
 			\hline
 			Legend: x: implements the issue, o: partially implements the issue, -: not implements the issue & & & &\\
@@ -276,7 +276,7 @@ Changkyu et al. segmented FAST into SIMD, cache, and page blocks. They highly op
 
 % ART
 Leis et al. also do not make adaptions of ART in view of blocking to the cache line size. Thus, a performance increase can be reached by adapting ART to cache line size.
-\subsection{Compression}
+\subsection{Usage of compression}
 % Usage and type of compression
 Along with the fast growing amount of data stored in modern database systems, the size of index structures grows fast. Compression of nodes decreases the size of index structures. Key compression leads to better search performance with SIMD, because more keys are compared in parallel.
 
@@ -318,6 +318,9 @@ Due to the mentioned performance increase of horizontal vectorization, minimizin
 
 % Cache line usage and branch misses
 Compared to horizontal vectorization and minimizing key size, an efficient cache line usage and avoiding branch misses lead to lesser performance increase. Although, both criteria decrease the number of CPU cycles, the performance increase does not reach a multiple of the needed performance. Therefore, we assign the third highest weight to efficient cache line usage and to avoiding branch misses.
+
+% Compression
+Afterwards, we assign the fourth highest weight to the usage compression. With key compression, the performance increase of horizontal vectorization rises. Path compression decreases the height of index structures and consequently less nodes are passed during traversal. 
 
 % Adapted node types and adapted search algorithm
 We assign the lowest weight to the adaption of nodes and to the usage of an adapted search algorithm. The adaption of nodes does not lead directly to performance increase, but is the basis for horizontal vectorization and efficient cache line usage. The usage of an adapted search algorithm, for example k-ary search, needs lesser compare steps. Nevertheless, it is not applicable for all of the considered index structures and it requires large node sizes to increase the performance.  
@@ -373,24 +376,30 @@ To compare as less keys as possible within one node to find the matching childre
 % Comparison of adapted index structures
 Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST [5] and ART [4] to FAST and show a performance increase. 
 
-\section{Conclusion}
-% Say what you say before you say it
-In this work, we compare adapted index structures for modern database systems and discuss the usage of SIMD within these. We extract important issues of these adaptions and show their impact on the performance of the index structures. 
+\section{Conclusion and Future Work}
 
 % What changes
-Index structures which were designed for disk-based memory database systems does not fulfill the requirements of modern database systems. Due to in-memory database systems, the IO-bottleneck moves from disk to RAM further to RAM to cache. Furthermore, not only the number of CPU cycles restricts the performance, also cache and branch misses have an important impact of performance. Modern CPUs provide multiple SIMD registers and instructions to process multiple data items in parallel. Using SIMD speeds up the performance, depending on the implementation of the operations with SIMD.
+%Index structures which were designed for disk-based memory database systems does not fulfill the requirements of modern database systems. Due to in-memory database systems, the IO-bottleneck moves from disk to RAM further to RAM to cache. Furthermore, not only the number of CPU cycles restricts the performance, also cache and branch misses have an important impact of performance. Modern CPUs provide multiple SIMD registers and instructions to process multiple data items in parallel. Using SIMD speeds up the performance, depending on the implementation of the operations with SIMD.
 
-% Important issues
-After comparing the adapted index structures, we extract the following issues to speed up the performance of index structures in modern database systems:
-\begin{itemize}
-	\item Horizontal vectorization
-	\item Minimized key size
-	\item Adapted node sizes and types
-	\item Decreased branch misses
-	\item Full use of cache line using blocking and alignment
-	\item Compression
-	\item Adapt search algorithm for linearised nodes
-\end{itemize}
+% Say what you say before you say it
+In this work, we compare the adapted index structures Seg-Tree/Trie, FAST, VAST, and ART and evaluate the usage of SIMD within these. We extract important criteria of these adaptions and weight them according to their impact on the performance.
+
+% Important criteria
+Due to direct performance increase of horizontal vectorization with SIMD up to a multiple, this is the highest weighted criteria. Minimizing the key size leads to the comparison of more keys in parallel and is therefore assigned with the second highest weight. Afterwards, we assign the efficient usage of the cache line and the decrease of branch misses the third highest weight. The other considered criteria, in descending order in view of performance increase, are the usage of compression, the adaption of node types ans size, and the usage of an adapted search algorithm to find keys within nodes. 
+
+% Space for additional improvements of some index structures
+Since not all considered index structures implement all criteria, we plan to combine different approaches. We presented that key compression leads to considerable performance increase. Therefore, we plan to examine the usage of key compression for Seg-Tree and ART. Furthermore, we plan to apply the evaluation of SIMD comparison results with addition and multiplication operations used in VAST to Seg-Tree and ART. 
+
+At last, we plan to examine the usage of k-ary search in ART for the node type \emph{Node256}, since the other node types contain too less keys to get a considerable performance increase. 
+%\begin{itemize}
+%	\item Horizontal vectorization
+%	\item Minimized key size
+%	\item Adapted node sizes and types
+%	\item Decreased branch misses
+%	\item Full use of cache line using blocking and alignment
+%	\item Compression
+%	\item Adapt search algorithm for linearised nodes
+%\end{itemize}
 
 %- Weighting of important points, descending\\
 %$\rightarrow$ Keep keys as small as possible because comparing keys in parallel leads to direct performance speed up\\
@@ -398,13 +407,13 @@ After comparing the adapted index structures, we extract the following issues to
 %$\rightarrow$ Align and block the index structures for better cache line usage\\
 %$\rightarrow$ Decrease branch misses like VAST do\\
 
-\section{Future work}
-\begin{itemize}
-	\item Using k-ary search in FAST/VAST
-	\item Looking in detail to the decrease of branch misses using addition/multiplication operations and SIMD
-	\item Another use of SIMD in index structures than search, other DB operations
-	\item Look at other SIMD techniques and parameters to increase performance
-\end{itemize}
+%\section{Future work}
+%\begin{itemize}
+%	\item Using k-ary search in FAST/VAST
+%	\item Looking in detail to the decrease of branch misses using addition/multiplication operations and SIMD
+%	\item Another use of SIMD in index structures than search, other DB operations
+%	\item Look at other SIMD techniques and parameters to increase performance
+%\end{itemize}
 
 %Open questions, use SIMD for tree creation/updates instead of only for traversal
 \begin{thebibliography}{00}
