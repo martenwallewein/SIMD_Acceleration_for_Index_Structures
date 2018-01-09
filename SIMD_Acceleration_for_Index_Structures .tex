@@ -23,21 +23,24 @@ marten.wallewein-eising@st.ovgu.de}
 \maketitle
 
 \begin{abstract}
-\begin{itemize}
-	\item summary: 
-	\subitem Give short an overview of SIMD and modern index structures
-	\subitem Explain what are the problems of the ``old" index structures made for disk-based database systems
-	\subitem Explain which approaches were made to adapt index structures to modern systems and what they have in common and what are differences
-	\item Why is this work important: 
-	\subitem Give a state of current development of the index structures
-	\subitem Collect common approaches to adapt other index structures TODO: ReThink
-	\item K-ary search trees, FAST, VAST and ART compared
-	\item Contribution: What are important approaches used by different implementations to adapt index structures to modern systems
-\end{itemize}
+Index structures designed for disk-based database systems do not fulfill the requirements for modern database systems. To improve the performance of these index structures, different approaches are presented by several authors, including horizontal vectorization with SIMD and efficient cache line usage. 
+
+In this work, we compare the adapted index structures Seg-Tree/Trie, FAST, VAST, and ART and evaluate the usage of SIMD within these. We extract important criteria of these adaptions and weight them according to their impact on the performance. Furthermore, we present openings in the considered index structures for additional adaptions to combine advantages of the different adaptions.
+%\begin{itemize}
+%	\item summary: 
+%	\subitem Give short an overview of SIMD and modern index structures
+%	\subitem Explain what are the problems of the ``old" index structures made for disk-based database systems
+%	\subitem Explain which approaches were made to adapt index structures to modern systems and what they have in common and what are differences
+%	\item Why is this work important: 
+%	\subitem Give a state of current development of the index structures
+%	\subitem Collect common approaches to adapt other index structures TODO: ReThink
+%	\item K-ary search trees, FAST, VAST and ART compared
+%	\item Contribution: What are important approaches used by different implementations to adapt index structures to modern systems
+%\end{itemize}
 \end{abstract}
 
 \begin{IEEEkeywords}
-SIMD, index 
+SIMD, horizontal vectorization
 \end{IEEEkeywords}
 
 \section{Introduction}
