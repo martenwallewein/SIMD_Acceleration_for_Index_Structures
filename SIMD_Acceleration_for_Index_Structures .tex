@@ -150,7 +150,7 @@ Kim et al. consider the search performance as queries per second. The CPU search
 Yamamuro et al. extended FAST building an index structure called Vector-Advanced and Compressed Structure Tree (VAST) \cite{b5}. They adapt the blocking and aligning structure of FAST and add compression of nodes along with improved SIMD usage. In Figure 4, we show the structure of the VAST-Tree including layers and different blocking elements. The top layer $P_{32}$ uses the techniques of FAST with the same SIMD, cache line and page blocking with 32 bit keys.
 
 % Block compression
-In order to decrease the size of the index structure to better fit into main memory, the middle and bottom layers use compressed nodes. In the layer $P_{16}$, the 32 bit keys of each node are compressed to 16 bit keys using lossy compression. Analogue, in $P_8$ the keys are compressed to 8 bit with lossy compression. In the leaf nodes, Yamamuro et al. decrease the node size with the lossless compression algorithm \emph{P4Delta}, which results in a good balance between compression ratio and decompression speed. If an error occurs due to information loss, they present an algorithm for error correction. They use prefix and suffix truncation to compress keys and calculate an offset $\Delta w$ of the incorrect key to the correct key during tree traversal. If the $\Delta w != 0$, VAST-Tree scans the leaf nodes sequentially until $\Delta w != 0$ becomes $0$.
+In order to decrease the size of the index structure to better fit into main memory, the middle and bottom layers use compressed nodes. In the layer $P_{16}$, the 32 bit keys of each node are compressed to 16 bit keys using lossy compression. Analogue, in $P_8$ the keys are compressed to 8 bit with lossy compression. In the leaf nodes, Yamamuro et al. decrease the node size with the lossless compression algorithm \emph{P4Delta}, which results in a good balance between compression ratio and decompression speed. If an error occurs due to information loss, they present an algorithm for error correction. They use prefix and suffix truncation to compress keys and calculate an offset $\Delta w$ of the incorrect key to the correct key during tree traversal. If $\Delta w\neq0$, VAST-Tree scans the leaf nodes sequentially until $\Delta w$ becomes $0$.
 
 % SIMD usage
 Along with the other considered index structures, Yamamuro et al. compare multiple keys to one search key with SIMD in the tree traversal. Due to the key compression of nodes, the VAST-Tree compares more keys in parallel than FAST. Additionally, they reduce branch misses with an adapted SIMD usage. They use addition and multiplication operations on the results of a SIMD key comparison, instead of conditional branches (if-then paths), to find the next node in tree traversal.
@@ -167,7 +167,7 @@ Due to lossy and lossless compression of the majority of nodes, Yamamuro et al. 
 
 \subsection{ART}\label{SCM}
 % Basics about radix tree
-Leis et al. adapted a radix tree for efficient indexing in main-memory database systems called Adaptive Radix Tree \cite{b4}. Analogue to the Seg-Trie, the height of a radix tree depends on the chunk size of the keys stored in each node. ART divides keys into 8-bit chunks. They differentiate between inner nodes and leaf nodes and adapt each of them in a different way.
+Leis et al. adapted a radix tree for efficient indexing in main-memory database systems called Adaptive Radix Tree \cite{b4}. Similar to the Seg-Trie, the height of a radix tree depends on the chunk size of the keys stored in each node. ART divides keys into 8-bit chunks. They differentiate between inner nodes and leaf nodes and adapt each of them in a different way.
 
 % Adaption of inner nodes
 Instead of using a constant node size for each inner node, they present four types of nodes with different numbers of keys and children. The types of nodes, sorted ascending by their size, are \emph{Node4}, \emph{Node16}, \emph{Node48}, and \emph{Node256}. When the capacity of a node is exhausted due to insertion, it is replaced by a larger node type. When a node becomes underfull due to key removal, it is replaced by a smaller node type. In Figure 5, we show these node types containing keys that are mapped to subtrees.
@@ -411,18 +411,18 @@ At last, we plan to examine the usage of k-ary search in ART for the node type \
 %Open questions, use SIMD for tree creation/updates instead of only for traversal
 \begin{thebibliography}{00}
 \bibitem{b1}M. Suaib, A. Palaty and K. Sambhav Pandey, ``Architecture of SIMD Type Vector Processor'' in IJCA (0975 - 8887) Volume 20, No.4, 2011.
-\bibitem{b2} J. Zhou and K. A. Ross  ``Implementing Database Operations Using SIMD Instructions'' in ACM SIGMOD’02, pp. 145-156, 2002.%, Madison, Wisconsin, USA
+\bibitem{b2} J. Zhou and K. A. Ross  ``Implementing Database Operations Using SIMD Instructions'' in ACM SIGMOD, pp. 145-156, 2002.%, Madison, Wisconsin, USA
 \bibitem{b3} S. Zeuch, F. Huber and J.-C. Freytag  ``Adapting Tree Structures for Processing with SIMD Instructions'' in EDBT, 2014.%, Athens, Greece
-\bibitem{b4} V. Leis, A. Kemper and T. Neumann ``The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases'' in ICDE 2013, pages 38-49, 2013.
-\bibitem{b5} T. Yamamuro, M. Onizuka, T. Hitaka, and M. Yamamuro ``VAST-Tree: A Vector-Advanced and Compressed Structure for Massive Data Tree Traversal'' in EDBT 2012, pp. 396-407, 2012.%, Berlin, Germany.
-\bibitem{b6} C. Kim, J. Chhugani, N. Satish, E. Sedlar, A. D. Nguyen, T. Kaldewey, V. W. Lee, S. A. Brandt and P. Dubey ``FAST: Fast Architecture Sensitive Tree Search on Modern CPUs and GPUs'' in SIGMOD’10, pp. 339-350, 2010.%, Indianapolis, Indiana, USA.
-\bibitem{b7}O. Polychroniou, A. Raghavan and K. A. Ross, ``Rethinking SIMD Vectorization for In-Memory Databases'' in SIGMOD’15, pages 1493-1508, 2015.%, Melbourne, Victoria, Australia.
+\bibitem{b4} V. Leis, A. Kemper and T. Neumann ``The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases'' in ICDE, pages 38-49, 2013.
+\bibitem{b5} T. Yamamuro, M. Onizuka, T. Hitaka, and M. Yamamuro ``VAST-Tree: A Vector-Advanced and Compressed Structure for Massive Data Tree Traversal'' in EDBT, pp. 396-407, 2012.%, Berlin, Germany.
+\bibitem{b6} C. Kim, J. Chhugani, N. Satish, E. Sedlar, A. D. Nguyen, T. Kaldewey, V. W. Lee, S. A. Brandt and P. Dubey ``FAST: Fast Architecture Sensitive Tree Search on Modern CPUs and GPUs'' in SIGMOD, pp. 339-350, 2010.%, Indianapolis, Indiana, USA.
+\bibitem{b7}O. Polychroniou, A. Raghavan and K. A. Ross, ``Rethinking SIMD Vectorization for In-Memory Databases'' in SIGMOD, pages 1493-1508, 2015.%, Melbourne, Victoria, Australia.
 \bibitem{b8} J. Rao and K. A. Ross ``Cache conscious indexing for decision support in main memory'' in VLDB, pages 78-89, 1999.
 \bibitem{b9}  M. Zukowski, S. Heman, N. Nes, and P. Boncz. ``Super-scalar ram-cpu cache compression'' in ICDE, pp. 59, 2006.
 \bibitem{b10} G. Graefe and P.-A. Larson. ``B-tree indexes and cpu caches'' in ICDE, pp. 349-358, 2001.
 \bibitem{b11} M. A. Bender, E. D. Demaine, and M. Farach-Colton ``Cache-oblivious b-trees'' in FOCS, pp. 399-409, 2000.
 \bibitem{b12} M. A. Bender, M. Farach-Colton, and B. C. Kuszmaul ``Cache-oblivious string b-trees'' in PODS, pp. 233-242, 2006.
-\bibitem{b13} J. Rao and K. A. Ross ``Making $B^+$-Trees cache conscious in main memory'' in SIGMOD’00, Vol. 29, No.2, pp. 475-486, 2000.
+\bibitem{b13} J. Rao and K. A. Ross ``Making $B^+$-Trees cache conscious in main memory'' in SIGMOD, Vol. 29, No.2, pp. 475-486, 2000.
 \bibitem{b14} B. Schlegel, R. Gemulla, and W. Lehner ``K-ary search on modern processor'' in DaMoN workshop, pp. 52-60, 2009.
 \end{thebibliography}
 
