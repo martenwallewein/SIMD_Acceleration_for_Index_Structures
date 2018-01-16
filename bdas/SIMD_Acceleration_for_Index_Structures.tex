@@ -105,7 +105,7 @@ Tiergartenstr. 17, 69121 Heidelberg, Germany\\
 After decades of creating and improving index structures for disk-based database systems, nowadays even large databases fit into the main memory. Since index structures like the $B^+$-tree or the radix tree have an important part in database systems to realise scan or range-based search operations, these index structures experienced many adaptions to fulfill the needs of modern database systems. Instead of overcoming the bottleneck of IO-operations from disk to RAM, the target of modern index structures is to improve the usage of CPU cache and processor architectures.
 
 % Introduce tree structures and specific Problem: Cache and TLB misses and branch mispredictions cost a lot of calculation effort
-Several index structures have already shown that the bottleneck from RAM to CPU can be overcome using Single Instruction Multiple Data (SIMD) \cite{b1} operations. These index structures include: the k-ary Search Tree (Seg-tree) \cite{b3}, Adapted Radix Tree (ART) \cite{b4}, Fast Architecture Sensitive Tree (FAST) \cite{b6}, and Vector-Advanced and Compressed Structure Tree (VAST) \cite{b5}. As Yamamuro et al. show, important causes for increased runtime are cache misses and branch mispredictions. To overcome branch mispredictions and to decrease CPU cycles, SIMD  is used in modern index structures for tree traversal \cite{b2}. Zeuch et al. show how to use SIMD to compare mutliple keys in one CPU cycle. To decrease cache misses, the Kim et al. and Leis et al. show how they adapted FAST and ART to the cache line size.  
+Several index structures have already shown that the bottleneck from RAM to CPU can be overcome using Single Instruction Multiple Data (SIMD) \cite{suaib2011architecture} operations. These index structures include: the k-ary Search Tree (Seg-tree) \cite{zeuch2014adapting}, Adapted Radix Tree (ART) \cite{leis2013adaptive}, Fast Architecture Sensitive Tree (FAST) \cite{kim2010fast}, and Vector-Advanced and Compressed Structure Tree (VAST) \cite{yamamuro2012vast}. As Yamamuro et al. show, important causes for increased runtime are cache misses and branch mispredictions. To overcome branch mispredictions and to decrease CPU cycles, SIMD  is used in modern index structures for tree traversal \cite{zhou2002implementing}. Zeuch et al. show how to use SIMD to compare mutliple keys in one CPU cycle. To decrease cache misses, the Kim et al. and Leis et al. show how they adapted FAST and ART to the cache line size.  
 
 % Objectives and Contribution
 All approaches use SIMD only for key comparison within tree traversal and try to decrease the key size to fit more keys into one SIMD register. Therefore FAST and Seg-tree only provide implementations for search algorithms. With this work we make the following contributions:
@@ -137,7 +137,7 @@ A common approach of decreasing CPU cycles for algorithms is to adapt the algori
 			\_\_m128i \_mm\_set1\_epi32(int i) & Sets the four signed 32-bit integer values to i.\\
 			\hline
 		\end{tabular}
-		\label{tab1}
+		\label{tasuaib2011architecture}
 	\end{center}
 \end{table*}
 % SIMD explanation
@@ -147,10 +147,10 @@ Modern CPUs have additional SIMD registers along with an additional instruction 
 Consequently, the main advantage of SIMD is to process multiple data parallel in contrast to pipelining and SISD. The main restriction of SIMD instructions is that a sequential load of data is required. To load data into a SIMD register, the data has to be stored consecutively in main memory. Additionally, the size of SIMD registers is limited. Therefore processing data types of the common size of 64-bit and more lead to a small performance increase, since only few data items are processed with a single instruction.
 
 % Horizontal vs vertical vector processing
-Polychroniou et al. \cite{b7} show two general approaches to use SIMD, horizontal and vertical vector processing. They name the comparison of one search key to multiple other keys horizontal vectorization, whereas processing a different input key per vector lane is named vertical vectorization.
+Polychroniou et al. \cite{polychroniou2015rethinking} show two general approaches to use SIMD, horizontal and vertical vector processing. They name the comparison of one search key to multiple other keys horizontal vectorization, whereas processing a different input key per vector lane is named vertical vectorization.
 
 % How horizontal vectorization works
-Since FAST, Seg-Tree, ART and VAST only use horizontal vectorization, we focus on this approach.  For example, Zeuch et al. \cite{b3} use 128-bit SIMD registers and adjusted SIMD operations to load data into a register and to compare the data of one SIMD register with another. For example, a 128-bit SIMD register processes sixteen 8-bit or eight 16-bit data items with one instruction. %In Table 2 TODO: Insert Table! we show a comparison of key size and the number of keys that can be processed parallel with one SIMD instruction.
+Since FAST, Seg-Tree, ART and VAST only use horizontal vectorization, we focus on this approach.  For example, Zeuch et al. \cite{zeuch2014adapting} use 128-bit SIMD registers and adjusted SIMD operations to load data into a register and to compare the data of one SIMD register with another. For example, a 128-bit SIMD register processes sixteen 8-bit or eight 16-bit data items with one instruction. %In Table 2 TODO: Insert Table! we show a comparison of key size and the number of keys that can be processed parallel with one SIMD instruction.
 
 % SIMD restrictions
 
@@ -175,7 +175,7 @@ The performance of Seg-Tree depends on k-ary search and horizontal vectorization
 \begin{figure*}
 	\includegraphics[width=1.0\textwidth]{figure_3.png}
 	\caption{(a) Node indices (=memory locations) of the binary tree (b) Rearranged nodes with SIMD blocking (c) Index tree blocked in three-level
-		hierarchy – first-level page blocking, second-level cache line blocking, third-level SIMD blocking of FAST. Adapted from Kim et al. \cite{b6}.}
+		hierarchy – first-level page blocking, second-level cache line blocking, third-level SIMD blocking of FAST. Adapted from Kim et al. \cite{kim2010fast}.}
 	\label{fig}
 \end{figure*}
 
@@ -190,7 +190,7 @@ To perform a tree traversal on the Seg-Trie, the search key is split into $r$ se
 
 \subsection{FAST}\label{SCM}
 % Introduction of FAST
-Kim et al. adapted a binary tree to optimize for architecture features like page size, cache line size, and SIMD bandwidth called Fast Architecture Sensitive Tree \cite{b6}. In contrast to Seg-Tree, FAST is also adapted to disk-based database systems. Kim et al. show the performance increase because of decreasing cache misses and better cache line usage. In order to optimize for architectural features, tree nodes are rearranged for hierarchical blocking. In Figure 3, we show an index tree blocked in three-level hierarchy introduced by Kim et al. 
+Kim et al. adapted a binary tree to optimize for architecture features like page size, cache line size, and SIMD bandwidth called Fast Architecture Sensitive Tree \cite{kim2010fast}. In contrast to Seg-Tree, FAST is also adapted to disk-based database systems. Kim et al. show the performance increase because of decreasing cache misses and better cache line usage. In order to optimize for architectural features, tree nodes are rearranged for hierarchical blocking. In Figure 3, we show an index tree blocked in three-level hierarchy introduced by Kim et al. 
 
 % How hierarchical blocking is achieved
 According to Figure 3, we define $d_K=2$ as the depth of a SIMD block, $d_L=5$ as the depth of a page block, $N_K=2^{d_K} -1$ as the number of keys that fit into a SIMD register, and $N_L = 2^{d_L} - 1$ as the number of keys that fit into a cache line. To rearrange the nodes, Kim et al. sorted the nodes, as shown in Figure 3 (a). Afterwards, they combine the first $N_K$ keys and lay them out in breadth-first fashion (the first key as root, the next $N_K - 1$ keys as children on depth 2). These first $N_K$ keys represent a SIMD block. They continue to lay out the next keys the same fashion, building the SIMD blocks with root keys 3, 6, 9, and 12, as shown in Figure 3 (b). This process continues for all sub-trees that are completely in the first $d_L$ levels from the root. If a sub-tree does not completely fit in the first $d_L$ levels, the keys are laid out according to the appropriate number of levels $(d_L \% d_K)$ as shown in depth 4 in Figure 3 (b). The first $N_L$ keys represent a cache line block. We define $d_P=31$ as the depth of a page block and $N_P=2^{d_P} -1$ as the number of keys that fit into a page. The procedure of hierarchical blocking continues analogue until the $N_P$ keys are laid out, representing a page block. After building one page block, the next page block is build up the same way. In Figure 3 (c) we show the different blocks in a hierarchical blocked index tree.
@@ -199,12 +199,12 @@ According to Figure 3, we define $d_K=2$ as the depth of a SIMD block, $d_L=5$ a
 Kim et al. present implementations for building and traversing the tree adapted for CPU and also for GPU. Building up the tree, SIMD is used to computing the index for $N_K$ keys within the SIMD level block in parallel, achieving around 2X SIMD scaling as compared to the scalar code. With a Core i7 processor, the runtime of building a FAST tree with $64M$ tuples is less than $0.1$ seconds. Traversing the tree, they compare one search key to multiple keys of the index structure. To use the complete bandwidth of cache and main memory within the search, blocks are loaded completely into associated memories from large blocks to small blocks. For a page block, at first the page is loaded into main memory. Then cache line blocks are loaded one after another in the cache and for each cache line block, the included SIMD blocks are loaded into the SIMD register. All keys of this SIMD block are compared with one SIMD instruction. After looking up the resulting bitmask, the corresponding SIMD block is loaded (including the load of the surrounding larger blocks) until the key is found or the last level of the index structure is reached.
 
 % Performance
-Kim et al. consider the search performance as queries per second. The CPU search performance on the Core i7 with 64M 32-bit (key, rowID) pairs is 5X faster than the best reported number \cite{b14}, resulting in a throughput of 50M search queries per second. Considering larger index structures, the GPU performance increase exceeds the CPU performance increase, because TLB and cache misses grow up and the CPU search becomes memory bandwidth bound.
+Kim et al. consider the search performance as queries per second. The CPU search performance on the Core i7 with 64M 32-bit (key, rowID) pairs is 5X faster than the best reported number \cite{schlegel2009k}, resulting in a throughput of 50M search queries per second. Considering larger index structures, the GPU performance increase exceeds the CPU performance increase, because TLB and cache misses grow up and the CPU search becomes memory bandwidth bound.
 
 % Mention Compression?
 \subsection{VAST}\label{SCM}
 % What is from FAST
-Yamamuro et al. extended FAST building an index structure called Vector-Advanced and Compressed Structure Tree (VAST) \cite{b5}. They adapt the blocking and aligning structure of FAST and add compression of nodes along with improved SIMD usage. In Figure 4, we show the structure of the VAST-Tree including layers and different blocking elements. The top layer $P_{32}$ uses the techniques of FAST with the same SIMD, cache line and page blocking with 32 bit keys.
+Yamamuro et al. extended FAST building an index structure called Vector-Advanced and Compressed Structure Tree (VAST) \cite{yamamuro2012vast}. They adapt the blocking and aligning structure of FAST and add compression of nodes along with improved SIMD usage. In Figure 4, we show the structure of the VAST-Tree including layers and different blocking elements. The top layer $P_{32}$ uses the techniques of FAST with the same SIMD, cache line and page blocking with 32 bit keys.
 
 % Block compression
 In order to decrease the size of the index structure to better fit into main memory, the middle and bottom layers use compressed nodes. In the layer $P_{16}$, the 32 bit keys of each node are compressed to 16 bit keys using lossy compression. Analogue, in $P_8$ the keys are compressed to 8 bit with lossy compression. In the leaf nodes, Yamamuro et al. decrease the node size with the lossless compression algorithm \emph{P4Delta}, which results in a good balance between compression ratio and decompression speed. If an error occurs due to information loss, they present an algorithm for error correction. They use prefix and suffix truncation to compress keys and calculate an offset $\Delta w$ of the incorrect key to the correct key during tree traversal. If $\Delta w\neq0$, VAST-Tree scans the leaf nodes sequentially until $\Delta w$ becomes $0$.
@@ -217,14 +217,14 @@ Due to lossy and lossless compression of the majority of nodes, Yamamuro et al. 
 
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{figure_5.png}
-	\caption{An overview of VAST-Tree. The top layer ($P_{32}$) of VAST-Tree uses FAST techniques, and VAST-Tree compresses the middle and the bottom layers ($P_{16}$ and $P_8$) of the trees. Moreover, keys in leaf nodes ($key_1, key_2, ...,	key_N$) are compressed by using lossless compression. Adapted from Yamamuro et al. \cite{b5}.}
+	\caption{An overview of VAST-Tree. The top layer ($P_{32}$) of VAST-Tree uses FAST techniques, and VAST-Tree compresses the middle and the bottom layers ($P_{16}$ and $P_8$) of the trees. Moreover, keys in leaf nodes ($key_1, key_2, ...,	key_N$) are compressed by using lossless compression. Adapted from Yamamuro et al. \cite{yamamuro2012vast}.}
 	\label{fig}
 \end{figure}
 
 
 \subsection{ART}\label{SCM}
 % Basics about radix tree
-Leis et al. adapted a radix tree for efficient indexing in main-memory database systems called Adaptive Radix Tree \cite{b4}. Similar to the Seg-Trie, the height of a radix tree depends on the chunk size of the keys stored in each node. ART divides keys into 8-bit chunks. They differentiate between inner nodes and leaf nodes and adapt each of them in a different way.
+Leis et al. adapted a radix tree for efficient indexing in main-memory database systems called Adaptive Radix Tree \cite{leis2013adaptive}. Similar to the Seg-Trie, the height of a radix tree depends on the chunk size of the keys stored in each node. ART divides keys into 8-bit chunks. They differentiate between inner nodes and leaf nodes and adapt each of them in a different way.
 
 % Adaption of inner nodes
 Instead of using a constant node size for each inner node, they present four types of nodes with different numbers of keys and children. The types of nodes, sorted ascending by their size, are \emph{Node4}, \emph{Node16}, \emph{Node48}, and \emph{Node256}. When the capacity of a node is exhausted due to insertion, it is replaced by a larger node type. When a node becomes underfull due to key removal, it is replaced by a smaller node type. In Figure 5, we show these node types containing keys that are mapped to subtrees.
@@ -252,7 +252,7 @@ Since SIMD is only used in the tree search, we do not consider the performance i
 
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{figure_4.png}
-	\caption{Inner nodes of ART. The partial keys 0, 2, 3, and 255 are mapped to the subtrees a, b, c, and d. Adapted from Leis et al. \cite{b4}}
+	\caption{Inner nodes of ART. The partial keys 0, 2, 3, and 255 are mapped to the subtrees a, b, c, and d. Adapted from Leis et al. \cite{leis2013adaptive}}
 	\label{fig}
 \end{figure}
 
@@ -280,7 +280,7 @@ In Table 2, we show the performance criteria and their impact on performance inc
 			Legend: x: implements the issue, o: partially implements the issue, -: not implements the issue & & & & &\\
 			\hline
 		\end{tabular}
-		\label{tab1}
+		\label{tasuaib2011architecture}
 	\end{center}
 \end{table*}
 
@@ -380,7 +380,7 @@ Afterwards, we assign the fourth highest weight to the usage of compression. Wit
 We assign the lowest weight to the adaption of nodes and to the usage of an adapted search algorithm. The adaption of nodes does not lead directly to performance increase, but is the basis for horizontal vectorization and efficient cache line usage. The usage of an adapted search algorithm, for example k-ary search, needs lesser comparisons. Nevertheless, it is not applicable for all of the considered index structures and it requires large node sizes to increase the performance.  
 
 % Performance comparison
-Although our qualitative comparison yields various structural differences of the index structures, we cannot infer unbiased performance differences from the literature. The performance increases highly depend on the underlying hardware, the data types chosen for the keys, and the amount of keys inserted in the index structure. Therefore, comparing all structures directly does not lead to reasonable results. Although, Yamamuro et al. and Leis et al. compare VAST \cite{b5} and ART \cite{b4} to FAST, they only consider specific key sizes and data types. 
+Although our qualitative comparison yields various structural differences of the index structures, we cannot infer unbiased performance differences from the literature. The performance increases highly depend on the underlying hardware, the data types chosen for the keys, and the amount of keys inserted in the index structure. Therefore, comparing all structures directly does not lead to reasonable results. Although, Yamamuro et al. and Leis et al. compare VAST \cite{yamamuro2012vast} and ART \cite{leis2013adaptive} to FAST, they only consider specific key sizes and data types. 
 
 % GPU calculation, cache line usage becomes different impact, completely different technology%
 %At last, we consider the usage of SIMD with the GPU. Zeuch et al. and Kim et al. present algorithms to use GPU calculation for the Seg-Tree/Trie [3]. They compare one search key against multiple other keys with SIMD registers in the GPU, analogue to CPU usage. Since passing data to GPU registers is completely different compared to CPU registers and the other index structures only use the CPU, we do not go further into details of CPU calculation with SIMD. \textbf{TODO: References for SIMD with GPU?}
@@ -411,20 +411,20 @@ Although our qualitative comparison yields various structural differences of the
 
 \section{Related Work}
 % B+ Tree adaptions, compression
-In main-memory database systems, a $B^+$-Tree does not fulfill the requirements of efficient cache line usage. Therefore, it is important to adapt $B^+$-Trees to efficient cache line usage. Rao et al. show improved cache line usage for $B^+$-Trees \cite{b8}.  Compression is used to decrease the index size to fill more keys into the cache line. Zukowski et al. show the performance increase of better cache line usage with compression \cite{b9}. This adaption gives an alternative for us compared to the compression used in VAST.
+In main-memory database systems, a $B^+$-Tree does not fulfill the requirements of efficient cache line usage. Therefore, it is important to adapt $B^+$-Trees to efficient cache line usage. Rao et al. show improved cache line usage for $B^+$-Trees \cite{rao1999cache}.  Compression is used to decrease the index size to fill more keys into the cache line. Zukowski et al. show the performance increase of better cache line usage with compression \cite{zukowski2006super}. This adaption gives an alternative for us compared to the compression used in VAST.
 
 % Other adapted tree strucutures
-Graefe et al. present and summarize several techniques for improving cache performance for B-Trees [10]. Furthermore,
-Bender et al. show a cache oblivious B-Tree \cite{b11} and a cache oblivious B-Tree for string data types \cite{b12}. Other adapted index structures are shown by Rao et al., the Cache-Sensitive Search Trees (CSS-Tree) \cite{b8}, and the Cache Sensitive $B^+$-Tree (CSB+-Trees) \cite{b13}. They construct the tree such that the keys are placed with the best cache optimization as possible in terms of spatial or temporal locality. Since we consider efficient cache line usage as an important criteria for modern index structures, these adaptions gave useful ideas to measure performance increase due to efficient cache line usage. 
+Graefe et al. present and summarize several techniques for improving cache performance for B-Trees \cite{graefe2001b}. Furthermore,
+Bender et al. show a cache oblivious B-Tree \cite{bender2000cache} and a cache oblivious B-Tree for string data types \cite{bender2006cache}. Other adapted index structures are shown by Rao et al., the Cache-Sensitive Search Trees (CSS-Tree) \cite{rao1999cache}, and the Cache Sensitive $B^+$-Tree (CSB+-Trees) \cite{rao2000making}. They construct the tree such that the keys are placed with the best cache optimization as possible in terms of spatial or temporal locality. Since we consider efficient cache line usage as an important criteria for modern index structures, these adaptions gave useful ideas to measure performance increase due to efficient cache line usage. 
 
 % SIMD usage, vectorization
-During the traversal of an index structure in modern database systems, a huge number of keys are compared. Consequently, using SIMD instructions leads to better search performance. Polychroniou et al. consider different techniques to process multiple data items with one SIMD instruction \cite{b7}. They differentiate between horizontal and vertical vector processing and present benefits of each approach. We use this differentiation of vector processing for our comparison of SIMD usage.  
+During the traversal of an index structure in modern database systems, a huge number of keys are compared. Consequently, using SIMD instructions leads to better search performance. Polychroniou et al. consider different techniques to process multiple data items with one SIMD instruction \cite{polychroniou2015rethinking}. They differentiate between horizontal and vertical vector processing and present benefits of each approach. We use this differentiation of vector processing for our comparison of SIMD usage.  
 
 % k-ary search
-To compare as less keys as possible within one node to find the matching children, Zeuch et al. show the performance increase using k-ary search with SIMD instructions \cite{b3}. Schlegel et al. present the general benefits of k-ary search on modern processors \cite{b14}. Since k-ary search leads to a considerable factor of lesser key comparisons for large nodes, we choose the usage of an adapted search algorithm as one of our performance criteria.
+To compare as less keys as possible within one node to find the matching children, Zeuch et al. show the performance increase using k-ary search with SIMD instructions \cite{zeuch2014adapting}. Schlegel et al. present the general benefits of k-ary search on modern processors \cite{schlegel2009k}. Since k-ary search leads to a considerable factor of lesser key comparisons for large nodes, we choose the usage of an adapted search algorithm as one of our performance criteria.
 
 % Comparison of adapted index structures
-Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST \cite{b5} and ART \cite{b4} to FAST and show a performance increase. We consider this comparison to weight our performance criteria.
+Comparing adapted index structures for modern database systems leads to find important points to increase the performance of index structures. Yamamuro et al. and Leis et al. compare VAST \cite{yamamuro2012vast} and ART \cite{leis2013adaptive} to FAST and show a performance increase. We consider this comparison to weight our performance criteria.
 
 \section{Conclusion and Future Work}
 

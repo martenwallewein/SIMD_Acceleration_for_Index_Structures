@@ -1,39 +1,86 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{ref1284:CIR1998}
-Crawford, T., Iliopoulos, C., Raman, R.:
-\newblock String matching techniques for musical similarity and melodic
-  recognition.
-\newblock Computing in Musicology \textbf{11} (1998)  71--100
+\bibitem{suaib2011architecture}
+Suaib, M., Palaty, A., Pandey, K.S.:
+\newblock Architecture of simd type vector processor.
+\newblock International Journal of Computer Applications \textbf{20}(4) (2011)
 
-\bibitem{ref1284:Pet2009}
-Peters, J.:
-\newblock Discovering affinities between perceptual granules.
-\newblock In Cyran, K., Kozielski, S., Peters, J., Stanczyk, U., Wakulicz-Deja,
-  A., eds.: Man-Machine Interactions. Volume~59 of AISC.
-\newblock Springer-Verlag, Berlin Heidelberg, Germany (2009)  43--52
+\bibitem{zeuch2014adapting}
+Zeuch, S., Huber, F., Freytag, J.c.:
+\newblock Adapting tree structures for processing with simd instructions.
+\newblock (2014)
 
-\bibitem{ref1284:Bog2007}
-Borgelt, C.:
-\newblock Canonical forms for frequent graph mining.
-\newblock In: Advances in Data Analysis, Studies in Classification, Data
-  Analysis, and Knowledge Organization.
-\newblock Springer-Verlag, Berlin Heidelberg, Germany (2007)
+\bibitem{leis2013adaptive}
+Leis, V., Kemper, A., Neumann, T.:
+\newblock The adaptive radix tree: Artful indexing for main-memory databases.
+\newblock In: Data Engineering (ICDE), 2013 IEEE 29th International Conference
+  on, IEEE (2013)  38--49
 
-\bibitem{ref1284:Kor2002}
-Koren, I.:
-\newblock Computer Arithmetic Algorithms.
-\newblock A.K. Peters, Limited (2002)
+\bibitem{kim2010fast}
+Kim, C., Chhugani, J., Satish, N., Sedlar, E., Nguyen, A.D., Kaldewey, T., Lee,
+  V.W., Brandt, S.A., Dubey, P.:
+\newblock Fast: fast architecture sensitive tree search on modern cpus and
+  gpus.
+\newblock In: Proceedings of the 2010 ACM SIGMOD International Conference on
+  Management of data, ACM (2010)  339--350
 
-\bibitem{ref1284:BHR2000}
-Bergroth, L., Hakonen, H., Raita, T.:
-\newblock A survey of longest common subsequence algorithms.
-\newblock In: Proceedings of String Processing and Information Retrieval
-  Symposium. (2000)  39--48
+\bibitem{yamamuro2012vast}
+Yamamuro, T., Onizuka, M., Hitaka, T., Yamamuro, M.:
+\newblock Vast-tree: A vector-advanced and compressed structure for massive
+  data tree traversal.
+\newblock In: Proceedings of the 15th International Conference on Extending
+  Database Technology, ACM (2012)  396--407
 
-\bibitem{ref1284:NVi2008}
-{NVidia Corporation}:
-\newblock {NVidia CUDA\texttrademark Programming Guide}, version 2.1,
-  12/08/2008 \newline\url{http://www.nvidia.com/object/cuda_get.html}.
+\bibitem{zhou2002implementing}
+Zhou, J., Ross, K.A.:
+\newblock Implementing database operations using simd instructions.
+\newblock In: Proceedings of the 2002 ACM SIGMOD international conference on
+  Management of data, ACM (2002)  145--156
+
+\bibitem{polychroniou2015rethinking}
+Polychroniou, O., Raghavan, A., Ross, K.A.:
+\newblock Rethinking simd vectorization for in-memory databases.
+\newblock In: Proceedings of the 2015 ACM SIGMOD International Conference on
+  Management of Data, ACM (2015)  1493--1508
+
+\bibitem{schlegel2009k}
+Schlegel, B., Gemulla, R., Lehner, W.:
+\newblock K-ary search on modern processors.
+\newblock In: Proceedings of the Fifth International Workshop on Data
+  Management on New Hardware, ACM (2009)  52--60
+
+\bibitem{rao1999cache}
+Rao, J., Ross, K.A.:
+\newblock Cache conscious indexing for decision-support in main memory.
+\newblock In: VLDB. Volume~99. (1999)  78--89
+
+\bibitem{zukowski2006super}
+Zukowski, M., Heman, S., Nes, N., Boncz, P.:
+\newblock Super-scalar ram-cpu cache compression.
+\newblock In: Data Engineering, 2006. ICDE'06. Proceedings of the 22nd
+  International Conference on, IEEE (2006)  59--59
+
+\bibitem{graefe2001b}
+Graefe, G., Larson, P.A.:
+\newblock B-tree indexes and cpu caches.
+\newblock In: Data Engineering, 2001. Proceedings. 17th International
+  Conference on, IEEE (2001)  349--358
+
+\bibitem{bender2000cache}
+Bender, M.A., Demaine, E.D., Farach-Colton, M.:
+\newblock Cache-oblivious b-trees.
+\newblock In: Foundations of Computer Science, 2000. Proceedings. 41st Annual
+  Symposium on, IEEE (2000)  399--409
+
+\bibitem{bender2006cache}
+Bender, M.A., Farach-Colton, M., Kuszmaul, B.C.:
+\newblock Cache-oblivious string b-trees.
+\newblock In: Proceedings of the twenty-fifth ACM SIGMOD-SIGACT-SIGART
+  symposium on Principles of database systems, ACM (2006)  233--242
+
+\bibitem{rao2000making}
+Rao, J., Ross, K.A.:
+\newblock Making b+-trees cache conscious in main memory.
+\newblock In: ACM SIGMOD Record. Volume~29., ACM (2000)  475--486
 
 \end{thebibliography}
