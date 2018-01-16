@@ -1,0 +1,39 @@
+\begin{thebibliography}{1}
+
+\bibitem{ref1284:CIR1998}
+Crawford, T., Iliopoulos, C., Raman, R.:
+\newblock String matching techniques for musical similarity and melodic
+  recognition.
+\newblock Computing in Musicology \textbf{11} (1998)  71--100
+
+\bibitem{ref1284:Pet2009}
+Peters, J.:
+\newblock Discovering affinities between perceptual granules.
+\newblock In Cyran, K., Kozielski, S., Peters, J., Stanczyk, U., Wakulicz-Deja,
+  A., eds.: Man-Machine Interactions. Volume~59 of AISC.
+\newblock Springer-Verlag, Berlin Heidelberg, Germany (2009)  43--52
+
+\bibitem{ref1284:Bog2007}
+Borgelt, C.:
+\newblock Canonical forms for frequent graph mining.
+\newblock In: Advances in Data Analysis, Studies in Classification, Data
+  Analysis, and Knowledge Organization.
+\newblock Springer-Verlag, Berlin Heidelberg, Germany (2007)
+
+\bibitem{ref1284:Kor2002}
+Koren, I.:
+\newblock Computer Arithmetic Algorithms.
+\newblock A.K. Peters, Limited (2002)
+
+\bibitem{ref1284:BHR2000}
+Bergroth, L., Hakonen, H., Raita, T.:
+\newblock A survey of longest common subsequence algorithms.
+\newblock In: Proceedings of String Processing and Information Retrieval
+  Symposium. (2000)  39--48
+
+\bibitem{ref1284:NVi2008}
+{NVidia Corporation}:
+\newblock {NVidia CUDA\texttrademark Programming Guide}, version 2.1,
+  12/08/2008 \newline\url{http://www.nvidia.com/object/cuda_get.html}.
+
+\end{thebibliography}
