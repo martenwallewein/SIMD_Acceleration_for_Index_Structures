@@ -1,0 +1,8 @@
+- FM Index for dummies: https://link.springer.com/chapter/10.1007/978-3-319-58274-0_16
+-> Cache line adaption, index structure for string keys
+
+- Analysis of the Effect of Chosen Initialization Parameters on Database Performance: https://link.springer.com/content/pdf/10.1007%2F978-3-319-18422-7_5.pdf
+-> Adaption of block size and DB parameters for increased performance
+
+- Storage Efficiency of LOB Structures for Free RDBMSs on Example of PostgreSQL and Oracle Platforms: https://link.springer.com/chapter/10.1007%2F978-3-319-58274-0_18
+-> Compression of Objects for better IO usage 
