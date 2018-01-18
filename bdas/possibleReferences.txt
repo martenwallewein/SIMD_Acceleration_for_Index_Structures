@@ -1,4 +1,7 @@
-- FM Index for dummies: https://link.springer.com/chapter/10.1007/978-3-319-58274-0_16
+- Optimization of Memory Operations in Generalized Search Trees of PostgreSQL: https://link.springer.com/chapter/10.1007%2F978-3-319-58274-0_19
+-> Adaption if index methods and the cache line impact
+
+- FM Index for Dummies: https://link.springer.com/chapter/10.1007/978-3-319-58274-0_16
 -> Cache line adaption, index structure for string keys
 
 - Analysis of the Effect of Chosen Initialization Parameters on Database Performance: https://link.springer.com/content/pdf/10.1007%2F978-3-319-18422-7_5.pdf
