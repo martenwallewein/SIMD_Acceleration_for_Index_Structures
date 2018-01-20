@@ -20,7 +20,7 @@
 
 \usepackage{amssymb}
 \setcounter{tocdepth}{3}
-\usepackage{graphicx}
+\usepackage{graphicx}\usepackage{wrapfig}
 
 \usepackage{url}
 \urldef{\mailsa}\path|{alfred.hofmann, ursula.barth, ingrid.haas, frank.holzwarth,|
@@ -34,7 +34,7 @@
 \mainmatter  % start of an individual contribution
 
 % first the title is needed
-\title{SIMD Acceleration for Index Structures}
+\title{SIMD Acceleration for Main-Memory Index Structures -- A Survey}
 
 % a short form should be given in case it is too long for the running head
 \titlerunning{SIMD Acceleration for Index Structures}
@@ -45,25 +45,24 @@
 % their surnames. This ensures that the names appear correctly in
 % the running heads and the author index.
 %
-\author{Alfred Hofmann%
-\thanks{Please note that the LNCS Editorial assumes that all authors have used
-the western naming convention, with given names preceding surnames. This determines
-the structure of the names in the running heads and the author index.}%
-\and Ursula Barth\and Ingrid Haas\and Frank Holzwarth\and\\
-Anna Kramer\and Leonie Kunz\and Christine Rei\ss\and\\
-Nicole Sator\and Erika Siebert-Cole\and Peter Stra\ss er}
+\author{Marten Wallewein-Eising \and David Broneske \and Gunter Saake%
+%\thanks{Please note that the LNCS Editorial assumes that all authors have used
+%the western naming convention, with given names preceding surnames. This determines
+%the structure of the names in the running heads and the author index.}%
+%\and Ursula Barth\and Ingrid Haas\and Frank Holzwarth\and\\
+%Anna Kramer\and Leonie Kunz\and Christine Rei\ss\and\\
+%Nicole Sator\and Erika Siebert-Cole\and Peter Stra\ss er
+}
 %
 \authorrunning{SIMD Acceleration for Index Structures}
 % (feature abused for this document to repeat the title also on left hand pages)
 
 % the affiliations are given next; don't give your e-mail address
 % unless you accept that it will be published
-\institute{Springer-Verlag, Computer Science Editorial,\\
-Tiergartenstr. 17, 69121 Heidelberg, Germany\\
-\mailsa\\
-\mailsb\\
-\mailsc\\
-\url{http://www.springer.com/lncs}}
+\institute{University of Magdeburg,\\
+Magdeburg, Germany\\
+{firstname.lastname}@ovgu.de\\
+}
 
 %
 % NB: a more complex sample for affiliations and the mapping to the
@@ -112,39 +111,47 @@ All approaches use SIMD only for key comparison within tree traversal and try to
 \begin{itemize}
 	\item We compare different adaptions of index structures to fulfill requirements of modern database systems
 	\item We highlight the usage of SIMD and the cache line adaptions in all approaches
-	\item We extract the important points of these adaptions and their performance impact on the index structures
+	\item We extract important points of these adaptions and their performance impact on the index structures
 \end{itemize}
 % Paper structure
 We organized the rest of the paper as follows. In Section 2, we give the preliminaries for SIMD in general and for the use in index structures. In Section 3, we present the different approaches of adapted index structures and compare them in Section 4. In Section 5, we name related work. In Section 6, we present our conclusion and describe future work. 
 \section{SIMD-Style Processing}
-\begin{figure}
-	\includegraphics[width=0.4\textwidth]{figure_1.png}
-	\caption{Coherence between data, instructions, and the results of SISD and SIMD.}
-	\label{fig}
-\end{figure}
+
+\begin{wrapfigure}{r}{0.45\textwidth} \vspace{-20pt}
+  \begin{center}
+	\includegraphics[width=.45\textwidth]{SIMD}
+	\caption{Single Instruction Single Data (SISD) vs.\ Single Instruction Multiple Data (SIMD) processing.}
+	\label{fig}  \end{center}
+  \vspace{-20pt}
+\end{wrapfigure} 
 % SIMD explanation
-A common approach of decreasing CPU cycles for algorithms is to adapt the algorithm to pipelining. While one instruction is executed, the next instruction is already fetched. This approach executes one instruction on one data item, called Single Instruction Single Data (SISD). In contrast to execute one operation on one data item after another, the idea of SIMD is to execute a single instruction on multiple data items in parallel. In Figure 1, we show the coherence between data, instructions, and the results of SIMD and SISD. 
-\begin{table*}[htbp]
-	\caption{SIMD instructions from Streaming SIMD Extensions 2 (SSE2)}
-	\begin{center}
-		\begin{tabular}{|c|c|}
-			\hline
-			\textbf{SIMD instruction}&\textbf{Explanation}\\
-			\hline
-			\_\_m128i \_mm\_load\_si128 (\_\_m128i *p) & Loads a 128-bit value. Returns the value loaded into a variable representing a register.\\
-			\_\_m128i \_mm\_cmpgt\_epi32 (\_\_m128i a, \_\_m128i b) & Compares 4 signed 32-bit integers in a and 4 signed 32-bit integers
-			in b for greater-than.\\
-			\_\_m128i \_mm\_set1\_epi32(int i) & Sets the four signed 32-bit integer values to i.\\
-			\hline
-		\end{tabular}
-		\label{tasuaib2011architecture}
-	\end{center}
-\end{table*}
+A common approach of decreasing CPU cycles for algorithms is to adapt the algorithm to pipelining. While one instruction is executed, the next instruction is already fetched. This approach executes one instruction on one data item, called Single Instruction Single Data (SISD). In contrast to execute one operation on one data item after another, the idea of Single Instruction Multiple Data (SIMD) is to execute a single instruction on multiple data items in parallel. In Figure 1, we show the difference between SIMD and SISD. 
+
+%\begin{table*}[htbp]
+%\footnotesize
+%	\caption{SIMD instructions from Streaming SIMD Extensions 2 (SSE2)}
+%	\begin{center}
+%		\begin{tabular}{|c|c|}
+%			\hline
+%			\textbf{SIMD instruction}&\textbf{Explanation}\\
+%			\hline
+%			\_\_m128i \_mm\_load\_si128 (\_\_m128i *p) & Loads a 128-bit value. Returns the value loaded into a variable representing a register.\\
+%			\_\_m128i \_mm\_cmpgt\_epi32 (\_\_m128i a, \_\_m128i b) & Compares 4 signed 32-bit integers in a and 4 signed 32-bit integers
+%			in b for greater-than.\\
+%			\_\_m128i \_mm\_set1\_epi32(int i) & Sets the four signed 32-bit integer values to i.\\
+%			\hline
+%		\end{tabular}
+%		\label{tasuaib2011architecture}
+%	\end{center}
+%\end{table*}
 % SIMD explanation
-Modern CPUs have additional SIMD registers along with an additional instruction set adapted to process multiple data items in parallel. In Table 1, we show some SIMD instructions from Streaming SIMD Extensions 2 (SSE2). We consider \_mm\_cmpgt\_epi32 to show how SIMD works. After loading 4 different signed 32-bit integers in register $a$ and 4 equal signed 32-bit integers in register $b$, we compare them using \_mm\_cmpgt\_epi32. The comparison returns a bitmask showing which of the search keys in $a$ is greater than the one in $b$. 
+Modern CPUs have additional SIMD registers along with an additional instruction set adapted to process multiple data items in parallel. %In Table 1, we show some SIMD 
+For example, using the Streaming SIMD Extensions 2 (SSE2) on the example in Figure~\ref{fig}, we can add 4 values in one clock cycle.
+After loading 4 different signed 32-bit integers in register $a$ and 4 signed 32-bit integers in register $b$, we add them using \_mm\_add\_epi32. %The comparison returns a bitmask showing which of the search keys in $a$ is greater than the one in $b$. 
 
 % Pro's/contra's of SIMD
-Consequently, the main advantage of SIMD is to process multiple data parallel in contrast to pipelining and SISD. The main restriction of SIMD instructions is that a sequential load of data is required. To load data into a SIMD register, the data has to be stored consecutively in main memory. Additionally, the size of SIMD registers is limited. Therefore processing data types of the common size of 64-bit and more lead to a small performance increase, since only few data items are processed with a single instruction.
+%Consequently, the main advantage of SIMD is to process multiple data items in parallel in contrast to SISD. 
+The main restriction of SIMD instructions is that a sequential load of data is required. To load data into a SIMD register, the data has to be stored consecutively in main memory. Additionally, the size of SIMD registers is limited. Therefore processing data types of the common size of 64-bit and more lead to a small performance increase, since only few data items are processed with a single instruction.
 
 % Horizontal vs vertical vector processing
 Polychroniou et al. \cite{polychroniou2015rethinking} show two general approaches to use SIMD, horizontal and vertical vector processing. They name the comparison of one search key to multiple other keys horizontal vectorization, whereas processing a different input key per vector lane is named vertical vectorization.
@@ -155,13 +162,13 @@ Since FAST, Seg-Tree, ART and VAST only use horizontal vectorization, we focus o
 % SIMD restrictions
 
 \section{Adapted Tree Structures}
-In this section we present the previously mentioned index structures Seg-Tree/Trie, FAST, ART, and VAST. We consider the adaptions made compared to the base index structure, the usage of SIMD, and the performance gain presented by the authors of the certain index structures.
+In this section, we review the previously proposed index structures Seg-Tree/Trie, FAST, ART, and VAST. We consider the adaptions made compared to the base index structure, the usage of SIMD, and the performance gain presented by the authors of the certain index structures.
 \subsection{Seg-Tree and Seg-Trie}\label{SCM}
 % Basics k-ary search
 Zeuch et al. adapted the $B^+$-Tree by having a k-ary search tree as each inner node, called segment, and perform a k-ary search on each segment.  In Figure 2, we show the adaption of nodes made by Zeuch et al. for Seg-Tree. The k-ary search bases on the binary search but divides the search space into k partitions with k-1 separators. Compared to binary search, the k-ary search reduces the complexity from $O(\log_{2}{n})$ to $O(\log_{k}{n})$. They consider $m$ as the most bits to represent a data type and $\vert SIMD \vert$ as the size of SIMD-register, called SIMD bandwidth. Then, $k = \frac{\vert SIMD \vert }{m}$ defines the number of partitions for the k-ary search. 
 
 \begin{figure}
-	\includegraphics[width=0.5\textwidth]{figure_2.png}
+	\includegraphics[width=\textwidth]{SegTree}
 	\caption{Inner node format of Seg-Tree}
 	\label{fig}
 \end{figure}
@@ -263,6 +270,7 @@ In this section, we define criteria to compare the adaptions made in Seg-Tree, F
 In Table 2, we show the performance criteria and their impact on performance increase and show which index structure implements which of the criteria. In the following, we consider each criterium in detail before summarizing the comparison. For each criteria, we show how the index structure implements it. If the index structure does not implement the criteria, we consider if it is possible to implement it. Furthermore, we constitute why the adaptions cannot compared directly in view of performance.
 
 \begin{table*}[htbp]
+\footnotesize
 	\caption{Comparison of the considered index structures based on extracted criteria and the impact on performance increase}
 	\begin{center}
 		\begin{tabular}{|c|c|c|c|c|c|}
@@ -277,7 +285,7 @@ In Table 2, we show the performance criteria and their impact on performance inc
 			Usage of Compression & o & - & x & x & medium\\
 			Adapt search algorithm for linearised nodes & x & - & - & - & low\\
 			\hline
-			Legend: x: implements the issue, o: partially implements the issue, -: not implements the issue & & & & &\\
+			\multicolumn{6}{|c|}{Legend: x = implements the issue; o = partially implements the issue; - = does not implement the issue}\\
 			\hline
 		\end{tabular}
 		\label{tasuaib2011architecture}
