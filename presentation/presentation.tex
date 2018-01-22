@@ -30,10 +30,18 @@
 \section{Motivation}
 \begin{frame}
 \frametitle{Motivation}
-TODO: Insert Big Picture here...
+	\begin{center}
+		\includegraphics[width=0.7\textwidth]{img/big_picture.png}
+	\end{center}
 \end{frame}
 
 \section{B$^{+}$- and Radix-Trees}
+\begin{frame}
+\frametitle{B$^{+}$- and Radix-Trees}
+\begin{center}
+	\includegraphics[width=0.5\textwidth]{img/forest.png}
+\end{center}
+\end{frame}
 \begin{frame}
 \frametitle{B$^{+}$-Tree}
 	\begin{center}
@@ -55,7 +63,6 @@ TODO: Insert Big Picture here...
 		\item Number of children of every inner node is at least the radix $r$
 		\item Each node that is the only child is merged with its parent
 	\end{itemize}
-
 \end{frame}
 \section{SIMD Style Processing}
 \begin{frame}
@@ -82,6 +89,16 @@ TODO: Insert Big Picture here...
 \end{itemize}
 \end{frame}
 \section{Adapted Tree structures}
+
+\begin{frame}
+\frametitle{Adapted Tree structures}
+\begin{itemize}
+	\item Seg-Tree/Trie
+	\item FAST: Fast Architecture Sensitive Tree
+	\item VAST: Vector-Advanced and Compressed Structure Tree
+	\item ART: Adaptive Radix Tree
+\end{itemize}
+\end{frame}
 
 \subsection{Seg-Tree/Trie}
 \begin{frame}
@@ -125,9 +142,30 @@ TODO: Insert Big Picture here...
 \begin{center}
 	\includegraphics[width=1.05\textwidth]{img/art2.png}
 \end{center}
-	
+\begin{itemize}
+	\item Different node formats and sizes
+	\begin{itemize}
+		\item More flexible
+	\end{itemize}
+	\item Horizontal Vectorization on keys of \emph{Node16}
+	\item Lazy expansion and path compression
+\end{itemize}
 \end{frame}
 \section{Evaluation}
+
+\begin{frame}
+\frametitle{Evaluation}
+Important criteria for performance increase:
+\begin{itemize}
+	\item Horizontal vectorization
+	\item Minimized key size
+	\item Adapted node sizes and types
+	\item Decreased branch misses
+	\item Full use of cache line using blocking and alignment
+	\item Usage of compression
+	\item Adapt search algorithm for linearised nodes
+\end{itemize}
+\end{frame}
 
 \begin{frame}
 \frametitle{Evaluation}
@@ -143,6 +181,7 @@ Legend: x: implements the issue, o: partially implements the issue, -: not imple
 \begin{itemize}
 	\item \url{http://infolab.stanford.edu/~nsample/cs245/handouts/hw2sol/sol2.html}
 	\item \url{https://en.wikipedia.org/wiki/Radix\_tree}
+	\item \url{https://www.clker.com/clipart-bosque.html}
 \end{itemize}
 \end{frame}
 
