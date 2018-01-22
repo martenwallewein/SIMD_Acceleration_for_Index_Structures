@@ -176,6 +176,21 @@ Implementation of the considered performance criteria and their impact:
 Legend: x: implements the issue, o: partially implements the issue, -: not implements the issue
 \end{frame}
 
+\section{Conclusion}
+\begin{frame}
+\frametitle{Conclusion}
+How to adapt index structures to modern database systems:
+\begin{itemize}
+	\item Compare as many keys as possible in parallel with SIMD
+	\begin{itemize}
+		\item Direct performance increase up to a multiple
+	\end{itemize}
+	\item Efficient usage of cache line
+	\item Decrease branch misses
+	\item Use compression or adapted search algorithms
+	\end{itemize}
+\end{frame}
+
 \begin{frame}
 \frametitle{Sources}
 \begin{itemize}
