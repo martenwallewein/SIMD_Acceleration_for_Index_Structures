@@ -35,9 +35,10 @@
 	\end{center}
 \end{frame}
 
-\section{B$^{+}$- and Radix-Trees}
+%\section{B$^{+}$- and Radix-Trees}
+\section{Excursion: B$^{+}$-Tree} 
 \begin{frame}
-\frametitle{B$^{+}$- and Radix-Trees}
+\frametitle{Excursion: B$^{+}$-Tree}
 \begin{center}
 	\includegraphics[width=0.5\textwidth]{img/forest.png}
 \end{center}
@@ -49,21 +50,21 @@
 	\end{center}
 	\begin{itemize}
 		\item N-ary tree with large number of children per node
-		\item Only leaf nodes contain values, inner nodes only children
+		\item Only leaf nodes contain values
 		\item Leaf nodes often linked for range based scans
 	\end{itemize}
 \end{frame}
-\begin{frame}
-\frametitle{Radix-Tree}
-	\begin{center}
-	\includegraphics[width=0.6\textwidth]{img/radix_tree.png}
-	\end{center}
-	\begin{itemize}
-		\item Space optimized prefix tree
-		\item Number of children of every inner node is at least the radix $r$
-		\item Each node that is the only child is merged with its parent
-	\end{itemize}
-\end{frame}
+%\begin{frame}
+%\frametitle{Radix-Tree}
+%	\begin{center}
+%	\includegraphics[width=0.6\textwidth]{img/radix_tree.png}
+%	\end{center}
+%	\begin{itemize}
+%		\item Space optimized prefix tree
+%		\item Number of children of every inner node is at least the radix $r$
+%		\item Each node that is the only child is merged with its parent
+%	\end{itemize}
+%\end{frame}
 \section{SIMD Style Processing}
 \begin{frame}
 \frametitle{Single Instruction Multiple Data}
@@ -75,19 +76,19 @@
 	in b for greater-than.
 \end{itemize}
 \end{frame}
-\begin{frame}
-\frametitle{Horizontal Vectorization}
-\begin{center}
-	\includegraphics[width=0.6\textwidth]{img/horizontal_vectorization.png}
-\end{center}
-\begin{itemize}
-	\item Compare one search key to multiple keys of the index structure
-	\item Opposite: Vertical vectorization
-	\begin{itemize}
-		\item Not possible, since sequential data storage in main memory is needed
-	\end{itemize}
-\end{itemize}
-\end{frame}
+%\begin{frame}
+%\frametitle{Horizontal Vectorization}
+%\begin{center}
+%	\includegraphics[width=0.6\textwidth]{img/horizontal_vectorization.png}
+%\end{center}
+%\begin{itemize}
+%	\item Compare one search key to multiple keys of the index structure
+%	\item Opposite: Vertical vectorization
+%	\begin{itemize}
+%		\item Not possible, since sequential data storage in main memory is needed
+%	\end{itemize}
+%\end{itemize}
+%\end{frame}
 \section{Adapted Tree structures}
 
 \begin{frame}
@@ -95,8 +96,8 @@
 \begin{itemize}
 	\item Seg-Tree/Trie
 	\item FAST: Fast Architecture Sensitive Tree
-	\item VAST: Vector-Advanced and Compressed Structure Tree
-	\item ART: Adaptive Radix Tree
+	%\item VAST: Vector-Advanced and Compressed Structure Tree
+	%\item ART: Adaptive Radix Tree
 \end{itemize}
 \end{frame}
 
@@ -108,6 +109,7 @@
 \end{center}
 \begin{itemize}
 	\item Each node is a k-ary search tree
+	\item Each node is linearised to use k-ary search
 	\item $k = \frac{\vert SIMD \vert }{\vert Key \vert}$, k keys are compared in parallel
 	%\item Each node is a k-ary search tree
 \end{itemize}
@@ -124,33 +126,33 @@
 	\item Efficient cache line and page usage
 \end{itemize}
 \end{frame}
-\subsection{VAST}
-\begin{frame}
-\frametitle{Vector-Advanced and Compressed Structure Tree}
-\begin{center}
-	\includegraphics[width=0.5\textwidth]{img/vast2.png}
-\end{center}
-	\begin{itemize}
-	\item Layer $P_{32}$ same blocking structure as FAST, 32 Bit keys
-	\item Layer $P_{16}$ and $P_{8}$ compressed keys to 16 and 8 Bit (lossy)
-	\item Leaf nodes compressed lossless
-\end{itemize}
-\end{frame}
-\subsection{ART}
-\begin{frame}
-\frametitle{Adaptive Radix Tree}
-\begin{center}
-	\includegraphics[width=1.05\textwidth]{img/art2.png}
-\end{center}
-\begin{itemize}
-	\item Different node formats and sizes
-	\begin{itemize}
-		\item More flexible
-	\end{itemize}
-	\item Horizontal Vectorization on keys of \emph{Node16}
-	\item Lazy expansion and path compression
-\end{itemize}
-\end{frame}
+%\subsection{VAST}
+%\begin{frame}
+%\frametitle{Vector-Advanced and Compressed Structure Tree}
+%\begin{center}
+%	\includegraphics[width=0.5\textwidth]{img/vast2.png}
+%\end{center}
+%	\begin{itemize}
+%	\item Layer $P_{32}$ same blocking structure as FAST, 32 Bit keys
+%	\item Layer $P_{16}$ and $P_{8}$ compressed keys to 16 and 8 Bit (lossy)
+%	\item Leaf nodes compressed lossless
+%\end{itemize}
+%\end{frame}
+%\subsection{ART}
+%\begin{frame}
+%\frametitle{Adaptive Radix Tree}
+%\begin{center}
+%	\includegraphics[width=1.05\textwidth]{img/art2.png}
+%\end{center}
+%\begin{itemize}
+%	\item Different node formats and sizes
+%	\begin{itemize}
+%		\item More flexible
+%	\end{itemize}
+%	\item Horizontal Vectorization on keys of \emph{Node16}
+%	\item Lazy expansion and path compression
+%\end{itemize}
+%\end{frame}
 \section{Evaluation}
 
 \begin{frame}
