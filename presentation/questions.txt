@@ -1,0 +1,7 @@
+Offene Frage:
+
+Vortrag:
+- Warum ausgerechnet diese beiden Index Strukturen im Detail und die anderen beiden nicht?
+	-> Die wichtigen Performancefaktoren an diesen beiden besser erklärbar: Horizontal vectorization und Cache line misses etc
+	
+- 
