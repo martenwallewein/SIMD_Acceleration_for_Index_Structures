@@ -4,5 +4,7 @@
 \beamer@sectionintoc {5}{Adapted Tree structures}{7}{0}{4}
 \beamer@subsectionintoc {5}{1}{Seg-Tree/Trie}{8}{0}{4}
 \beamer@subsectionintoc {5}{2}{FAST}{9}{0}{4}
-\beamer@sectionintoc {6}{Evaluation}{10}{0}{5}
+\beamer@subsectionintoc {5}{3}{VAST}{11}{0}{4}
+\beamer@subsectionintoc {5}{4}{ART}{11}{0}{4}
+\beamer@sectionintoc {6}{Evaluation}{11}{0}{5}
 \beamer@sectionintoc {7}{Conclusion}{12}{0}{6}

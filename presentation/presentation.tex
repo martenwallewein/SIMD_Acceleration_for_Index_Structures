@@ -96,8 +96,8 @@
 \begin{itemize}
 	\item Seg-Tree/Trie
 	\item FAST: Fast Architecture Sensitive Tree
-	%\item VAST: Vector-Advanced and Compressed Structure Tree
-	%\item ART: Adaptive Radix Tree
+	\item VAST: Vector-Advanced and Compressed Structure Tree
+	\item ART: Adaptive Radix Tree
 \end{itemize}
 \end{frame}
 
@@ -126,7 +126,22 @@
 	\item Efficient cache line and page usage
 \end{itemize}
 \end{frame}
-%\subsection{VAST}
+\begin{frame}
+\frametitle{Adapted Tree structures}
+\begin{itemize}
+	\item VAST: Vector-Advanced and Compressed Structure Tree
+	\begin{itemize}
+		\item Extension of FAST
+		\item Uses key compression on lower levels of the tree
+	\end{itemize}
+	\item ART: Adaptive Radix Tree
+	\begin{itemize}
+		\item Uses different node types with different number of keys and children
+		\item Due to overfill or underfill of nodes, the node type is changed
+	\end{itemize}
+\end{itemize}
+\end{frame}
+\subsection{VAST}
 %\begin{frame}
 %\frametitle{Vector-Advanced and Compressed Structure Tree}
 %\begin{center}
@@ -138,7 +153,7 @@
 %	\item Leaf nodes compressed lossless
 %\end{itemize}
 %\end{frame}
-%\subsection{ART}
+\subsection{ART}
 %\begin{frame}
 %\frametitle{Adaptive Radix Tree}
 %\begin{center}
@@ -155,19 +170,19 @@
 %\end{frame}
 \section{Evaluation}
 
-\begin{frame}
-\frametitle{Evaluation}
-Important criteria for performance increase:
-\begin{itemize}
-	\item Horizontal vectorization
-	\item Minimized key size
-	\item Adapted node sizes and types
-	\item Decreased branch misses
-	\item Full use of cache line using blocking and alignment
-	\item Usage of compression
-	\item Adapt search algorithm for linearised nodes
-\end{itemize}
-\end{frame}
+%\begin{frame}
+%\frametitle{Evaluation}
+%Important criteria for performance increase:
+%\begin{itemize}
+%	\item Horizontal vectorization
+%	\item Minimized key size
+%	\item Adapted node sizes and types
+%	\item Decreased branch misses
+%	\item Full use of cache line using blocking and alignment
+%	\item Usage of compression
+%	\item Adapt search algorithm for linearised nodes
+%\end{itemize}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Evaluation}
@@ -197,8 +212,18 @@ How to adapt index structures to modern database systems:
 \frametitle{Sources}
 \begin{itemize}
 	\item \url{http://infolab.stanford.edu/~nsample/cs245/handouts/hw2sol/sol2.html}
-	\item \url{https://en.wikipedia.org/wiki/Radix\_tree}
+	%\item \url{https://en.wikipedia.org/wiki/Radix\_tree}
 	\item \url{https://www.clker.com/clipart-bosque.html}
+	\item S. Zeuch, F. Huber and J.-C. Freytag  ``Adapting Tree Structures for Processing with SIMD Instructions'' in EDBT, 2014.
+	\item C. Kim, J. Chhugani, N. Satish, E. Sedlar, A. D. Nguyen, T. Kaldewey, V. W. Lee, S. A. Brandt and P. Dubey ``FAST: Fast Architecture Sensitive Tree Search on Modern CPUs and GPUs'' in SIGMOD, pp. 339-350, 2010.
+	\item V. Leis, A. Kemper and T. Neumann ``The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases'' in ICDE, pages 38-49, 2013.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sources}
+\begin{itemize}
+	\item T. Yamamuro, M. Onizuka, T. Hitaka, and M. Yamamuro ``VAST-Tree: A Vector-Advanced and Compressed Structure for Massive Data Tree Traversal'' in EDBT, pp. 396-407, 2012.
 \end{itemize}
 \end{frame}
 
