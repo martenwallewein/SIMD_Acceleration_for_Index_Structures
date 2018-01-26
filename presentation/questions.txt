@@ -4,4 +4,6 @@ Vortrag:
 - Warum ausgerechnet diese beiden Index Strukturen im Detail und die anderen beiden nicht?
 	-> Die wichtigen Performancefaktoren an diesen beiden besser erklärbar: Horizontal vectorization und Cache line misses etc
 	
-- 
+- Warum in VAST erst 16 und dann 8 Bit?
+
+- Besser Schlüssel in Präfixbaum klein halten oder groß? Warum ist klein besser?

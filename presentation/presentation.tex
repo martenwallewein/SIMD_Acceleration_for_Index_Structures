@@ -123,7 +123,7 @@
 \begin{itemize}
 	\item Based on binary tree
 	\item Hierarchical blocking: SIMD, cache line and page blocks
-	\item Efficient cache line and page usage
+	\item Efficient register, cache line and page usage
 \end{itemize}
 \end{frame}
 \begin{frame}
@@ -204,7 +204,7 @@ How to adapt index structures to modern database systems:
 	\end{itemize}
 	\item Efficient usage of cache line
 	\item Decrease branch misses
-	\item Use compression or adapted search algorithms
+	\item Use compression or/and adapted search algorithms
 	\end{itemize}
 \end{frame}
 
@@ -214,9 +214,8 @@ How to adapt index structures to modern database systems:
 	\item \url{http://infolab.stanford.edu/~nsample/cs245/handouts/hw2sol/sol2.html}
 	%\item \url{https://en.wikipedia.org/wiki/Radix\_tree}
 	\item \url{https://www.clker.com/clipart-bosque.html}
-	\item S. Zeuch, F. Huber and J.-C. Freytag  ``Adapting Tree Structures for Processing with SIMD Instructions'' in EDBT, 2014.
-	\item C. Kim, J. Chhugani, N. Satish, E. Sedlar, A. D. Nguyen, T. Kaldewey, V. W. Lee, S. A. Brandt and P. Dubey ``FAST: Fast Architecture Sensitive Tree Search on Modern CPUs and GPUs'' in SIGMOD, pp. 339-350, 2010.
-	\item V. Leis, A. Kemper and T. Neumann ``The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases'' in ICDE, pages 38-49, 2013.
+	\item \url{http://deacademic.com/pictures/dewiki/51/300px-Bplustree.png}
+	\item Datenbanken Implementierungstechniken, Saake und Sattler
 \end{itemize}
 \end{frame}
 
@@ -224,6 +223,9 @@ How to adapt index structures to modern database systems:
 \frametitle{Sources}
 \begin{itemize}
 	\item T. Yamamuro, M. Onizuka, T. Hitaka, and M. Yamamuro ``VAST-Tree: A Vector-Advanced and Compressed Structure for Massive Data Tree Traversal'' in EDBT, pp. 396-407, 2012.
+	\item S. Zeuch, F. Huber and J.-C. Freytag  ``Adapting Tree Structures for Processing with SIMD Instructions'' in EDBT, 2014.
+	\item C. Kim, J. Chhugani, N. Satish, E. Sedlar, A. D. Nguyen, T. Kaldewey, V. W. Lee, S. A. Brandt and P. Dubey ``FAST: Fast Architecture Sensitive Tree Search on Modern CPUs and GPUs'' in SIGMOD, pp. 339-350, 2010.
+	\item V. Leis, A. Kemper and T. Neumann ``The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases'' in ICDE, pages 38-49, 2013.
 \end{itemize}
 \end{frame}
 
