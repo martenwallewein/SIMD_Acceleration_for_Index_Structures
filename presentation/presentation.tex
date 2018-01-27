@@ -36,24 +36,24 @@
 \end{frame}
 
 %\section{B$^{+}$- and Radix-Trees}
-\section{Excursion: B$^{+}$-Tree} 
-\begin{frame}
-\frametitle{Excursion: B$^{+}$-Tree}
-\begin{center}
-	\includegraphics[width=0.5\textwidth]{img/forest.png}
-\end{center}
-\end{frame}
-\begin{frame}
-\frametitle{B$^{+}$-Tree}
-	\begin{center}
-		\includegraphics[width=0.6\textwidth]{img/bplus_tree.png}
-	\end{center}
-	\begin{itemize}
-		\item N-ary tree with often a large number of children per node
-		\item Only leaf nodes contain keys
-		\item Leaf nodes often linked for range based scans
-	\end{itemize}
-\end{frame}
+%\section{Excursion: B$^{+}$-Tree} 
+%\begin{frame}
+%\frametitle{Excursion: B$^{+}$-Tree}
+%\begin{center}%
+%	\includegraphics[width=0.5\textwidth]{img/forest.png}
+%\end{center}
+%\end{frame}
+%\begin{frame}
+%\frametitle{B$^{+}$-Tree}
+%	\begin{center}
+%		\includegraphics[width=0.6\textwidth]{img/bplus_tree.png}
+%	\end{center}
+%	\begin{itemize}
+%		\item N-ary tree with often a large number of children per node
+%		\item Only leaf nodes contain keys
+%		\item Leaf nodes often linked for range based scans
+%	\end{itemize}
+%\end{frame}
 %\begin{frame}
 %\frametitle{Radix-Tree}
 %	\begin{center}
@@ -76,20 +76,20 @@
 	in b for greater-than.
 \end{itemize}
 \end{frame}
-%\begin{frame}
-%\frametitle{Horizontal Vectorization}
-%\begin{center}
-%	\includegraphics[width=0.6\textwidth]{img/horizontal_vectorization.png}
-%\end{center}
-%\begin{itemize}
-%	\item Compare one search key to multiple keys of the index structure
-%	\item Opposite: Vertical vectorization
-%	\begin{itemize}
-%		\item Not possible, since sequential data storage in main memory is needed
-%	\end{itemize}
-%\end{itemize}
-%\end{frame}
-\section{Adapted Tree structures}
+\begin{frame}
+\frametitle{Horizontal Vectorization}
+\begin{center}
+	\includegraphics[width=0.6\textwidth]{img/horizontal_vectorization.png}
+\end{center}
+\begin{itemize}
+	\item Compare one search key to multiple keys of the index structure
+	\item Opposite: Vertical Vectorization
+	\begin{itemize}
+		\item Not useful, since sequential data storage in main memory is needed
+	\end{itemize}
+\end{itemize}
+\end{frame}
+\section{Adapted Index Structures}
 
 \begin{frame}
 \frametitle{Adapted Index Structures}
@@ -214,8 +214,8 @@ How to adapt index structures to modern database systems:
 	\item \url{http://infolab.stanford.edu/~nsample/cs245/handouts/hw2sol/sol2.html}
 	%\item \url{https://en.wikipedia.org/wiki/Radix\_tree}
 	\item \url{https://www.clker.com/clipart-bosque.html}
-	\item \url{http://deacademic.com/pictures/dewiki/51/300px-Bplustree.png}
-	\item Datenbanken Implementierungstechniken, Saake und Sattler
+	%\item \url{http://deacademic.com/pictures/dewiki/51/300px-Bplustree.png}
+	\item Datenbanken Implementierungstechniken, Ausgabe 3, Saake und Sattler
 \end{itemize}
 \end{frame}
 
