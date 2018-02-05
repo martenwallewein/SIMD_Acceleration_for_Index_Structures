@@ -54,13 +54,6 @@ Rao, J., Ross, K.A.:
 \newblock Cache conscious indexing for decision-support in main memory.
 \newblock In: VLDB. Volume~99. (1999)  78--89
 
-\bibitem{borodin2017optimization}
-Borodin, A., Mirvoda, S., Kulikov, I., Porshnev, S.:
-\newblock Optimization of memory operations in generalized search trees of
-  postgresql.
-\newblock In: International Conference: Beyond Databases, Architectures and
-  Structures, Springer (2017)  224--232
-
 \bibitem{zukowski2006super}
 Zukowski, M., Heman, S., Nes, N., Boncz, P.:
 \newblock Super-scalar ram-cpu cache compression.
@@ -84,6 +77,13 @@ Bender, M.A., Farach-Colton, M., Kuszmaul, B.C.:
 \newblock Cache-oblivious string b-trees.
 \newblock In: Proceedings of the twenty-fifth ACM SIGMOD-SIGACT-SIGART
   symposium on Principles of database systems, ACM (2006)  233--242
+
+\bibitem{borodin2017optimization}
+Borodin, A., Mirvoda, S., Kulikov, I., Porshnev, S.:
+\newblock Optimization of memory operations in generalized search trees of
+  postgresql.
+\newblock In: International Conference: Beyond Databases, Architectures and
+  Structures, Springer (2017)  224--232
 
 \bibitem{rao2000making}
 Rao, J., Ross, K.A.:
