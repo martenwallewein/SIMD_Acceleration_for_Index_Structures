@@ -179,13 +179,6 @@ As mentioned before, each segment of the Seg-Tree is a k-ary search tree. To per
 % Performance increase
 The performance of Seg-Tree depends on k-ary search and horizontal vectorization. The smaller a key the more keys are compared parallel. According to the relevance of 32 and 64-bit data types in modern systems, the k-ary search performance increases up to the factor of four for 32-bit types and two for 64-bit types.
 
-\begin{figure*}
-	\includegraphics[width=1.0\textwidth]{figure_3.png}
-	\caption{(a) Node indices (=memory locations) of the binary tree (b) Rearranged nodes with SIMD blocking (c) Index tree blocked in three-level
-		hierarchy – first-level page blocking, second-level cache line blocking, third-level SIMD blocking of FAST. Adapted from Kim et al. \cite{kim2010fast}.}
-	\label{fig}
-\end{figure*}
-
 % Addional adaption: Seg-trie
 %TODO: Each Node is also k-ary search tree
 Zeuch et al. also show the k-ary search on an adapted prefix tree \emph{(trie for short)} called Seg-Trie. A trie is a search tree where nodes store a parts of the key, called chunks. For example, a 32 bit key with a chunk size of 8 bit is stored in a trie with 4 levels. Analogue to the Seg-Tree, each node is again designed as a k-ary search tree. Complete keys are stored in leaf nodes or are build by concatenating partial keys from the root node to a leaf node. This approach benefits of the separation of the keys in different levels of the tree. Consequently, they are smaller and more keys can be compared in parallel. The Seg-Trie$_L$ is defined as a balanced trie where each node on each level contains one part of a key with $L$ Bits. The tree has $r = \frac{m}{L}$ levels $(E_0, E_1, .., E_r)$, where m is the number of most bits to represent the data type.
@@ -197,7 +190,15 @@ To perform a tree traversal on the Seg-Trie, the search key is split into $r$ se
 
 \subsection{FAST}\label{SCM}
 % Introduction of FAST
-Kim et al. adapted a binary tree to optimize for architecture features like page size, cache line size, and SIMD bandwidth called Fast Architecture Sensitive Tree \cite{kim2010fast}. In contrast to Seg-Tree, FAST is also adapted to disk-based database systems. Kim et al. show the performance increase because of decreasing cache misses and better cache line usage. In order to optimize for architectural features, tree nodes are rearranged for hierarchical blocking. In Figure 3, we show an index tree blocked in three-level hierarchy introduced by Kim et al. 
+\begin{wrapfigure}{r}{0.45\textwidth} \vspace{-40pt}
+  \begin{center}
+	\includegraphics[width=.45\textwidth]{FAST}\vspace{-60pt}
+	\caption{Index tree blocked in three-level hierarchy: first-level page blocking, second-level cache line blocking, third-level SIMD blocking of FAST. Adapted from Kim et al. \cite{kim2010fast}.}
+	\label{fig}  
+	\end{center}
+\end{wrapfigure}Kim et al. adapted a binary tree to optimize for architecture features like page size, cache line size, and SIMD bandwidth called Fast Architecture Sensitive Tree \cite{kim2010fast}. In contrast to Seg-Tree, FAST is also adapted to disk-based database systems. Kim et al. show the performance increase because of decreasing cache misses and better cache line usage. In order to optimize for architectural features, tree nodes are rearranged for hierarchical blocking. In Figure 3, we show an index tree blocked in three-level hierarchy introduced by Kim et al. 
+
+
 
 % How hierarchical blocking is achieved
 According to Figure 3, we define $d_K=2$ as the depth of a SIMD block, $d_L=5$ as the depth of a page block, $N_K=2^{d_K} -1$ as the number of keys that fit into a SIMD register, and $N_L = 2^{d_L} - 1$ as the number of keys that fit into a cache line. To rearrange the nodes, Kim et al. sorted the nodes, as shown in Figure 3 (a). Afterwards, they combine the first $N_K$ keys and lay them out in breadth-first fashion (the first key as root, the next $N_K - 1$ keys as children on depth 2). These first $N_K$ keys represent a SIMD block. They continue to lay out the next keys the same fashion, building the SIMD blocks with root keys 3, 6, 9, and 12, as shown in Figure 3 (b). This process continues for all sub-trees that are completely in the first $d_L$ levels from the root. If a sub-tree does not completely fit in the first $d_L$ levels, the keys are laid out according to the appropriate number of levels $(d_L \% d_K)$ as shown in depth 4 in Figure 3 (b). The first $N_L$ keys represent a cache line block. We define $d_P=31$ as the depth of a page block and $N_P=2^{d_P} -1$ as the number of keys that fit into a page. The procedure of hierarchical blocking continues analogue until the $N_P$ keys are laid out, representing a page block. After building one page block, the next page block is build up the same way. In Figure 3 (c) we show the different blocks in a hierarchical blocked index tree.
@@ -222,11 +223,11 @@ Along with the other considered index structures, Yamamuro et al. compare multip
 % Performance
 Due to lossy and lossless compression of the majority of nodes, Yamamuro et al. reach a 95\% less space consumption of the VAST-Tree compared to a binary tree or FAST. When considering an index with $2^{32}$ keys, they reach up to $6.0$ and $1.24$ times performance increase compared to a binary tree and FAST. Although errors occur due to lossy compression, the error correction does not take a major influence on the traversal speed.
 
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{figure_5.png}
-	\caption{An overview of VAST-Tree. The top layer ($P_{32}$) of VAST-Tree uses FAST techniques, and VAST-Tree compresses the middle and the bottom layers ($P_{16}$ and $P_8$) of the trees. Moreover, keys in leaf nodes ($key_1, key_2, ...,	key_N$) are compressed by using lossless compression. Adapted from Yamamuro et al. \cite{yamamuro2012vast}.}
-	\label{fig}
-\end{figure}
+%\begin{figure}
+%	\includegraphics[width=0.5\textwidth]{figure_5.png}
+%	\caption{An overview of VAST-Tree. The top layer ($P_{32}$) of VAST-Tree uses FAST techniques, and VAST-Tree compresses the middle and the bottom layers ($P_{16}$ and $P_8$) of the trees. Moreover, keys in leaf nodes ($key_1, key_2, ...,	key_N$) are compressed by using lossless compression. Adapted from Yamamuro et al. \cite{yamamuro2012vast}.}
+%	\label{fig}
+%\end{figure}
 
 
 \subsection{ART}\label{SCM}
