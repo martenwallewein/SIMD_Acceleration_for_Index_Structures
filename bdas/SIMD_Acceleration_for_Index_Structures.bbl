@@ -8,82 +8,85 @@ Suaib, M., Palaty, A., Pandey, K.S.:
 \bibitem{zeuch2014adapting}
 Zeuch, S., Huber, F., Freytag, J.c.:
 \newblock Adapting tree structures for processing with simd instructions.
-\newblock (2014)
+\newblock In: Proceedings of the International Conference on Extending Database
+  Technology (EDBT), Citeseer (2014)
 
 \bibitem{leis2013adaptive}
 Leis, V., Kemper, A., Neumann, T.:
 \newblock The adaptive radix tree: Artful indexing for main-memory databases.
-\newblock In: Data Engineering (ICDE), 2013 IEEE 29th International Conference
-  on, IEEE (2013)  38--49
+\newblock In: Proceedings of the International Conference on Data Engineering
+  (ICDE), IEEE (2013)  38--49
 
 \bibitem{kim2010fast}
 Kim, C., Chhugani, J., Satish, N., Sedlar, E., Nguyen, A.D., Kaldewey, T., Lee,
   V.W., Brandt, S.A., Dubey, P.:
-\newblock Fast: fast architecture sensitive tree search on modern cpus and
-  gpus.
-\newblock In: Proceedings of the 2010 ACM SIGMOD International Conference on
-  Management of data, ACM (2010)  339--350
+\newblock Fast: Fast architecture sensitive tree search on modern {CPUs} and
+  {GPUs}.
+\newblock In: Proceedings of the International Conference on Management of Data
+  (SIGMOD), ACM (2010)  339--350
 
 \bibitem{yamamuro2012vast}
 Yamamuro, T., Onizuka, M., Hitaka, T., Yamamuro, M.:
 \newblock Vast-tree: A vector-advanced and compressed structure for massive
   data tree traversal.
-\newblock In: Proceedings of the 15th International Conference on Extending
-  Database Technology, ACM (2012)  396--407
+\newblock In: Proceedings of the International Conference on Extending Database
+  Technology (EDBT), ACM (2012)  396--407
 
-\bibitem{zhou2002implementing}
-Zhou, J., Ross, K.A.:
-\newblock Implementing database operations using simd instructions.
-\newblock In: Proceedings of the 2002 ACM SIGMOD international conference on
-  Management of data, ACM (2002)  145--156
+\bibitem{BKS+17}
+Broneske, D., K{\"o}ppen, V., Saake, G., Sch{\"a}ler, M.:
+\newblock Accelerating multi-column selection predicates in main-memory - the
+  {Elf} approach.
+\newblock In: International Conference on Data Engineering (ICDE), IEEE (2017)
+  647--658
 
 \bibitem{polychroniou2015rethinking}
 Polychroniou, O., Raghavan, A., Ross, K.A.:
-\newblock Rethinking simd vectorization for in-memory databases.
-\newblock In: Proceedings of the 2015 ACM SIGMOD International Conference on
-  Management of Data, ACM (2015)  1493--1508
+\newblock Rethinking {SIMD} vectorization for in-memory databases.
+\newblock In: Proceedings of the International Conference on Management of Data
+  (SIGMOD), ACM (2015)  1493--1508
 
 \bibitem{schlegel2009k}
 Schlegel, B., Gemulla, R., Lehner, W.:
 \newblock K-ary search on modern processors.
-\newblock In: Proceedings of the Fifth International Workshop on Data
-  Management on New Hardware, ACM (2009)  52--60
+\newblock In: Proceedings of the International Workshop on Data Management on
+  New Hardware (DaMoN), ACM (2009)  52--60
 
 \bibitem{rao1999cache}
 Rao, J., Ross, K.A.:
 \newblock Cache conscious indexing for decision-support in main memory.
-\newblock In: VLDB. Volume~99. (1999)  78--89
+\newblock In: Proceedings of the International Conference on Very Large
+  Databases (VLDB). Volume~99. (1999)  78--89
 
 \bibitem{zukowski2006super}
 Zukowski, M., Heman, S., Nes, N., Boncz, P.:
-\newblock Super-scalar ram-cpu cache compression.
-\newblock In: Data Engineering, 2006. ICDE'06. Proceedings of the 22nd
-  International Conference on, IEEE (2006)  59--59
+\newblock Super-scalar {RAM-CPU} cache compression.
+\newblock In: Proceedings of the International Conference on Data Engineering
+  (ICDE), IEEE (2006)  59--59
 
 \bibitem{graefe2001b}
 Graefe, G., Larson, P.A.:
-\newblock B-tree indexes and cpu caches.
-\newblock In: Data Engineering, 2001. Proceedings. 17th International
-  Conference on, IEEE (2001)  349--358
+\newblock B-tree indexes and {CPU} caches.
+\newblock In: Proceedings of the International Conference on Data Engineering
+  (ICDE), IEEE (2001)  349--358
 
 \bibitem{bender2000cache}
 Bender, M.A., Demaine, E.D., Farach-Colton, M.:
-\newblock Cache-oblivious b-trees.
-\newblock In: Foundations of Computer Science, 2000. Proceedings. 41st Annual
-  Symposium on, IEEE (2000)  399--409
+\newblock Cache-oblivious {B}-trees.
+\newblock In: Proceedings of the Annual Symposium on Foundations of Computer
+  Science, IEEE (2000)  399--409
 
 \bibitem{bender2006cache}
 Bender, M.A., Farach-Colton, M., Kuszmaul, B.C.:
-\newblock Cache-oblivious string b-trees.
-\newblock In: Proceedings of the twenty-fifth ACM SIGMOD-SIGACT-SIGART
-  symposium on Principles of database systems, ACM (2006)  233--242
+\newblock Cache-oblivious string {B}-trees.
+\newblock In: Proceedings of the Symposium on Principles of Database Systems
+  (PODS), ACM (2006)  233--242
 
 \bibitem{borodin2017optimization}
 Borodin, A., Mirvoda, S., Kulikov, I., Porshnev, S.:
 \newblock Optimization of memory operations in generalized search trees of
-  postgresql.
+  {PostgreSQL}.
 \newblock In: International Conference: Beyond Databases, Architectures and
-  Structures, Springer (2017)  224--232
+  Structures (BDAS), Springer (2017)  224--232
 
 \bibitem{rao2000making}
 Rao, J., Ross, K.A.:

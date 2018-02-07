@@ -3,47 +3,46 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: SIMD_Acceleration_for_Index_Structures.aux
 The style file: splncs.bst
 Database file #1: SIMD_Acceleration_for_Index_Structures.bib
-Warning--empty journal in zeuch2014adapting
 Warning--can't use both volume and number fields in rao2000making
 You've used 15 entries,
             2087 wiz_defined-function locations,
-            580 strings with 6895 characters,
-and the built_in function-call counts, 5647 in all, are:
-= -- 612
-> -- 180
+            578 strings with 6773 characters,
+and the built_in function-call counts, 5732 in all, are:
+= -- 622
+> -- 186
 < -- 15
-+ -- 65
-- -- 50
-* -- 354
-:= -- 712
++ -- 67
+- -- 52
+* -- 360
+:= -- 724
 add.period$ -- 19
 call.type$ -- 15
 change.case$ -- 15
 chr.to.int$ -- 0
-cite$ -- 17
-duplicate$ -- 300
-empty$ -- 572
-format.name$ -- 50
-if$ -- 1440
+cite$ -- 16
+duplicate$ -- 303
+empty$ -- 584
+format.name$ -- 52
+if$ -- 1466
 int.to.chr$ -- 0
 int.to.str$ -- 15
 missing$ -- 15
 newline$ -- 78
 num.names$ -- 15
-pop$ -- 83
+pop$ -- 82
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 207
+skip$ -- 210
 stack$ -- 0
 substring$ -- 392
-swap$ -- 158
+swap$ -- 160
 text.length$ -- 15
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 2
+warning$ -- 1
 while$ -- 54
 width$ -- 17
-write$ -- 179
-(There were 2 warnings)
+write$ -- 181
+(There was 1 warning)
