@@ -4,45 +4,45 @@ The top-level auxiliary file: SIMD_Acceleration_for_Index_Structures.aux
 The style file: splncs.bst
 Database file #1: SIMD_Acceleration_for_Index_Structures.bib
 Warning--can't use both volume and number fields in rao2000making
-You've used 15 entries,
+You've used 18 entries,
             2087 wiz_defined-function locations,
-            578 strings with 6773 characters,
-and the built_in function-call counts, 5732 in all, are:
-= -- 622
-> -- 186
-< -- 15
-+ -- 67
-- -- 52
-* -- 360
-:= -- 724
-add.period$ -- 19
-call.type$ -- 15
-change.case$ -- 15
+            598 strings with 7319 characters,
+and the built_in function-call counts, 6888 in all, are:
+= -- 747
+> -- 219
+< -- 19
++ -- 79
+- -- 61
+* -- 440
+:= -- 863
+add.period$ -- 25
+call.type$ -- 18
+change.case$ -- 18
 chr.to.int$ -- 0
-cite$ -- 16
-duplicate$ -- 303
-empty$ -- 584
-format.name$ -- 52
-if$ -- 1466
+cite$ -- 19
+duplicate$ -- 365
+empty$ -- 697
+format.name$ -- 61
+if$ -- 1760
 int.to.chr$ -- 0
-int.to.str$ -- 15
-missing$ -- 15
-newline$ -- 78
-num.names$ -- 15
-pop$ -- 82
+int.to.str$ -- 18
+missing$ -- 18
+newline$ -- 93
+num.names$ -- 18
+pop$ -- 93
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 210
+skip$ -- 258
 stack$ -- 0
-substring$ -- 392
-swap$ -- 160
-text.length$ -- 15
+substring$ -- 479
+swap$ -- 197
+text.length$ -- 19
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 1
-while$ -- 54
-width$ -- 17
-write$ -- 181
+while$ -- 65
+width$ -- 20
+write$ -- 217
 (There was 1 warning)
