@@ -1,0 +1,10 @@
+\beamer@sectionintoc {2}{Motivation}{3}{0}{1}
+\beamer@sectionintoc {3}{SIMD Style Processing}{4}{0}{2}
+\beamer@sectionintoc {4}{Adapted Index Structures}{6}{0}{3}
+\beamer@subsectionintoc {4}{1}{Elf}{7}{0}{3}
+\beamer@subsectionintoc {4}{2}{Seg-Tree/Trie}{8}{0}{3}
+\beamer@subsectionintoc {4}{3}{FAST}{9}{0}{3}
+\beamer@subsectionintoc {4}{4}{VAST}{10}{0}{3}
+\beamer@subsectionintoc {4}{5}{ART}{11}{0}{3}
+\beamer@sectionintoc {5}{Evaluation}{12}{0}{4}
+\beamer@sectionintoc {6}{Conclusion}{13}{0}{5}

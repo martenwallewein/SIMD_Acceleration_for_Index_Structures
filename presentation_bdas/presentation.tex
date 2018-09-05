@@ -1,0 +1,231 @@
+ \documentclass{beamer}
+
+\usetheme{MagdeburgFIN}
+\usefonttheme{structurebold}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{url}
+\usepackage{pdfpages}
+
+
+\title{SIMD Acceleration for Index Structures}
+\author{Marten Wallewein-Eising}
+\date{\today}
+\institute{Otto von Guericke Univerity, Magdeburg}
+
+\begin{document}
+
+\begin{frame}[plain]
+ \titlepage
+\end{frame}
+
+
+
+\section[Agenda]{}
+\begin{frame}
+\frametitle{Agenda}
+\tableofcontents
+\end{frame}
+
+\section{Motivation}
+\begin{frame}
+\frametitle{Motivation}
+	\begin{center}
+		\includegraphics[width=0.73\textwidth]{img/big_picture.png}
+	\end{center}
+\end{frame}
+
+%\section{B$^{+}$- and Radix-Trees}
+%\section{Excursion: B$^{+}$-Tree} 
+%\begin{frame}
+%\frametitle{Excursion: B$^{+}$-Tree}
+%\begin{center}%
+%	\includegraphics[width=0.5\textwidth]{img/forest.png}
+%\end{center}
+%\end{frame}
+%\begin{frame}
+%\frametitle{B$^{+}$-Tree}
+%	\begin{center}
+%		\includegraphics[width=0.6\textwidth]{img/bplus_tree.png}
+%	\end{center}
+%	\begin{itemize}
+%		\item N-ary tree with often a large number of children per node
+%		\item Only leaf nodes contain keys
+%		\item Leaf nodes often linked for range based scans
+%	\end{itemize}
+%\end{frame}
+%\begin{frame}
+%\frametitle{Radix-Tree}
+%	\begin{center}
+%	\includegraphics[width=0.6\textwidth]{img/radix_tree.png}
+%	\end{center}
+%	\begin{itemize}
+%		\item Space optimized prefix tree
+%		\item Number of children of every inner node is at least the radix $r$
+%		\item Each node that is the only child is merged with its parent
+%	\end{itemize}
+%\end{frame}
+\section{SIMD Style Processing}
+\begin{frame}
+\frametitle{Single Instruction Multiple Data}
+\begin{center}
+	\includegraphics[width=0.7\textwidth]{img/simd.pdf}
+\end{center}
+\begin{itemize}
+	\item \textbf{\_\_m128i \_mm\_add\_epi32 (\_\_m128i a, \_\_m128i b)} Adds  4 signed 32-bit integers in a to 4 signed 32-bit integers
+	in b.
+\end{itemize}
+\end{frame}
+\begin{frame}
+\frametitle{Horizontal Vectorization}
+%\begin{center}
+%	\includegraphics[width=0.6\textwidth]{img/horizontal_vectorization.png}
+%\end{center}
+\begin{itemize}
+	\item Using SIMD-instructions to compare data items in parallel
+	\item Compare one search key to multiple keys of the index structure
+	\begin{itemize}
+		\item Search key has to be duplicated
+		\item Often all keys of a node are compared against one search key
+	\end{itemize}
+	\vspace*{0.5cm}
+	\item Opposite: Vertical Vectorization
+	\begin{itemize}
+		\item Not useful, since sequential search key storage in main memory is needed
+	\end{itemize}
+\end{itemize}
+\end{frame}
+\section{Adapted Index Structures}
+
+\begin{frame}
+\frametitle{Adapted Index Structures}
+\begin{itemize}
+	\item Elf
+	\item Seg-Tree/Trie
+	\item FAST: Fast Architecture Sensitive Tree
+	\item VAST: Vector-Advanced and Compressed Structure Tree
+	\item ART: Adaptive Radix Tree
+\end{itemize}
+\end{frame}
+
+\subsection{Elf}
+\begin{frame}
+	\frametitle{Elf}
+	\begin{center}
+		\includegraphics[width=0.8\textwidth]{img/elf.pdf}
+	\end{center}
+	\begin{itemize}
+		\item Multi-dimensional index structure for column-wise storage
+		\item Prefix-redundancy elimination on distinct column values
+		\item Linearisation for optimized memory layout
+	\end{itemize}
+\end{frame}
+
+\subsection{Seg-Tree/Trie}
+\begin{frame}
+\frametitle{Seg-Tree/Trie}
+\begin{center}
+	\includegraphics[width=1.0\textwidth]{img/SegTree.pdf}
+\end{center}
+\begin{itemize}
+	\item Each node is a k-ary search tree
+	\item Each node is linearised to use k-ary search
+	\item $k = \frac{\vert SIMD \vert }{\vert Key \vert}$, k keys are compared in parallel
+	%\item Each node is a k-ary search tree
+\end{itemize}
+\end{frame}
+\subsection{FAST}
+\begin{frame}
+\frametitle{Fast Architecture Sensitive Tree}
+\begin{center}
+	\includegraphics[width=0.55\textwidth]{img/fast2.png}
+\end{center}
+\begin{itemize}
+	\item Based on binary tree
+	\item Hierarchical blocking: SIMD, cache line and page blocks
+	\item Efficient register, cache line and page usage
+\end{itemize}
+\end{frame}
+
+\subsection{VAST}
+\begin{frame}
+	\frametitle{Vector-Advanced and Compressed Structure Tree}
+	\begin{itemize}
+		\item Extension of FAST
+		%\item Same hierarchical blocking
+		\item Decrease branch misses avoiding conditional branches
+		\item Uses key compression on lower levels of the tree
+		\begin{itemize}
+			\item Lossy compression for inner nodes
+			\item Lossfree compression for child nodes
+		\end{itemize}
+		\item  Decompression and error correction of lossy compression has less impact compared to the performance increase with horizontal vectorisation 
+	\end{itemize}
+\end{frame}
+
+\subsection{ART}
+\begin{frame}
+	\frametitle{Adaptive Radix Tree}
+	%\begin{center}
+	%	\includegraphics[width=0.5\textwidth]{img/ART.pdf}
+	%\end{center}
+	\begin{itemize}
+		\item Uses different node types with different number of keys and children
+		\item Due to overfill or underfill of nodes, the node type is changed
+		\item Horizontal vectorization only on one node type
+		\item Reduced space consumption due to lazy evaluation and path compression
+	\end{itemize}
+\end{frame}
+
+\section{Evaluation}
+
+\begin{frame}
+\frametitle{Evaluation}
+Implementation of the considered performance criteria and their impact:
+\begin{figure}
+	\includegraphics[width=0.9\textwidth]{img/table.png}
+\end{figure}
+
+
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}
+\frametitle{Conclusion}
+How to adapt index structures to modern database systems:
+\begin{itemize}
+	\item Compare as many keys as possible in parallel with SIMD
+	\begin{itemize}
+		\item Direct performance increase up to a multiple
+	\end{itemize}
+	\item Efficient usage of cache line
+	\item Decrease branch misses
+	\item Use compression or/and adapted search algorithms
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sources}
+\begin{itemize}
+	\item \url{http://infolab.stanford.edu/~nsample/cs245/handouts/hw2sol/sol2.html}
+	%\item \url{https://en.wikipedia.org/wiki/Radix\_tree}
+	\item \url{https://www.clker.com/clipart-bosque.html}
+	%\item \url{http://deacademic.com/pictures/dewiki/51/300px-Bplustree.png}
+	\item Datenbanken Implementierungstechniken, Ausgabe 3, Saake und Sattler
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sources}
+\begin{itemize}
+	\item T. Yamamuro, M. Onizuka, T. Hitaka, and M. Yamamuro ``VAST-Tree: A Vector-Advanced and Compressed Structure for Massive Data Tree Traversal'' in EDBT, pp. 396-407, 2012.
+	\item S. Zeuch, F. Huber and J.-C. Freytag  ``Adapting Tree Structures for Processing with SIMD Instructions'' in EDBT, 2014.
+	\item C. Kim, J. Chhugani, N. Satish, E. Sedlar, A. D. Nguyen, T. Kaldewey, V. W. Lee, S. A. Brandt and P. Dubey ``FAST: Fast Architecture Sensitive Tree Search on Modern CPUs and GPUs'' in SIGMOD, pp. 339-350, 2010.
+	\item V. Leis, A. Kemper and T. Neumann ``The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases'' in ICDE, pages 38-49, 2013.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Thank you for your attention!}
+\end{frame}
+\end{document}

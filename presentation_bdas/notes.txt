@@ -1,0 +1,123 @@
+Presentation Notes:
+
+- Title:
+	- Vortrag über SIMD Acceleration for Index Structures
+	- Betrachte ich verschiedene, aktuelle Index Strukturen und extrahiere Performancefaktoren für moderne Strukturen
+
+- Gliederung:
+	- Als erstes Motivation, warum ist das Thema wichtig
+	- Danach ein Paar Grundlagen zu B+ Bäumen und der Anwendung von SIMD
+	- Dann beschreibung der 4 betrachteten Index Strukturen, auf 2 im Detail eingehen, die anderen beiden nur kurz beschreiben
+	- Evaluation der extrahierten PF und wie/ob die Index Strukturen diese umsetzen
+	- Zum Schluss noch Conclusion: Was soll von dem Vortrag mitgenommen werden
+
+- Motivation:
+	- Warum ist das Thema wichtig:
+	- In Datenbanken genutzte Index Strukturen schon sehr alt, wurden für disk-basierte Datenbanksysteme entwickelt
+		-> Auch an diese angepasst, z.B. Knotengröße beim B-Baum passend zur Seitengröße des DBS
+	- Das reicht nicht mehr für moderne Systeme
+	- Datenmengen werden immer größer und somit auch Index Strukturen
+	- In Memory Databases brauchen andere Anpassungen: IO Flaschenhals wandert von Platte <-> RAM zu RAM <-> Cache
+	- Erweiterte Prozessorfunktionalitäten wie SIMD zur Parallelisierung
+	- Doch wie nutzt man diese am besten und welche Anpassungen sind nötig, um das Maximum an Performance aus der Index Struktur rauszuholen
+	- Darauf will ich versuchen mit diesem Vortrag ein paar Antworten zu geben
+	
+- Excursion B+ Baum:
+	- Nochmal kurz auf den B+ Baum eingehen:
+	- B-Baum:
+		- Ordnung m: Jeder knoten hat k, zwischen m und 2m, Schlüssel und k+1 Kinder
+		-> Oder nur m Schlüssel? Nochmal in Datenbanken Implmementierungstechniken nachgucken
+		- Wie Suche funktioniert...
+	- B+ Baum:
+		- B Baum, bei dem nur die Blätter schlüssel enthalten, inner Knoten nur referenzen auf Kindknoten
+			-> Um Baumhöhe zu reduzieren
+		- Blätter oft untereinander verlinkt, für Bereichssuche
+		- 
+
+- SIMD: 
+	- Wie name schon sagt: eine Operation auf mehreren Daten parallel
+		-> Man erhält dementsprechend je nach befehl mehrere Rückgabewerte
+	- Prozessoren verfügen über extra SIMD befehle und register, die dies ermöglichen
+	- Als Beispiel greater-than Vergleich für 4 signed 32 Bit integers
+		-> Ergebnis wiederum der entsprechende Typ, kann mittels anderen befehlen umgewandelt werden
+	- Im Gegensatz zu z.B. Pipelining tatsächliche Parallelität
+	
+- Adapted Index Structures:
+	- Um zu evaluieren, welche Faktoren für moderne Index Strukturen wichtig sind, habe ich mir 4 herausgesucht und genauer untersucht
+	- In meiner schriftlichen Ausarbeitung alle 4 detailliert beschrieben, hier aus Platzgründen nur 2 im Detail
+	- Alle nochmal nennen?
+	
+- Seg-Tree/Trie:
+	- Auch K-ärer Suchbaum genannt
+		-> k-äre Suche: Wie Binäre Suche nur aufteilung des Raums in k Teile
+		-> Folglich nur log_k Aufwand
+	- Jeder Knoten ist in sich wieder in k-ärer Suchbaum 
+	- Um die K-äre Suche durchzuführen, werden Knoten linearisiert, mittels Breitensuche bzw. Level-order Traversal
+	- Der Parameter k wird anhand der Key-Größe und der SIMD Bandbreite ermittelt7
+	- K Schlüssel parallel verglichen, dann in nächsten Bereich gesprungen
+	- Trie ist präfix Baum, d.h. Schlüssel werden in Teile aufgeteilt, Knoten spiegelt einen Teil des Schlüssels wieder
+	-> Prinzip der k-ären Suche funktioniert da jedoch ähnlich
+	
+- FAST:
+	- Erweiterung eines Binärbaums
+	- Für optimale Cache-Line und Register Nutzung wurde hierarchisches Blocking verwendet:
+		-> Baum wird in Blöcke eingeteilt, welche bestimmten Hardware Teilen entsprechen und immer im ganzen geladen werden
+		-> Erst wird Page Block geladen, dann cache Block in die Cache line und darauf ein SIMD Block in ein SIMD register
+		-> Sobald der erste Cache line Block verlassen wird, nächsten Block (Evtl Page neuladen)
+	- Abbildung:
+		-> Links sieht man den visualisierten Binärbaum, darunter das Aufteilen in SIMD Blöcke
+		-> Rechts die gesamte Struktur des hierarchischen Blockens
+		
+- VAST:
+	- Erweiterung von FAST
+	- Auch hierarchiches Blocking, in unteren Level zusätzlich Komprimierung der Schlüssel auf 16 und 8 Bit
+		-> Dadurch paralleles vergleichen von mehr Schlüsseln möglich
+	- Bessere Auswertung des Ergebnisses von SIMD operationen indem keine if Abfragen genutzt werden sondern addition und multiplikation um nächsten Knoten zu berechnen
+
+- ART:
+	- Angepasster Radix/Patricia Baum
+	- Radix Baum ist erweiterung des Präfix Baums in dem Pfade komprimiert und erst bei Anfrage ausgewertet werden
+	- ART nutzt verschiedene Knotentypen unterschiedlicher Größe, um flexibler eine große Datenmenge zu halten
+	- Wenn Knoten zu klein oder zu groß werden, werden sie durch den nächsten Typ ausgetauscht
+	
+- Evaluation:
+	- Zeigen der von mir gewählten Performancefaktoren mit Gewichtung und wie/ob die einzelnen Index Strukturen diese implementieren
+	- Evtl nicht auf die einzelne Implementation eingehen, sondern nur auf die Faktoren und die Gewichtung
+	- Horizontal vectorisation:
+		-> Vergleich eines Suchschlüssel mit mehreren Schlüsseln die in der Index Struktur sind
+		-> Hauptaugenmerk des Vortrags
+		-> Nutzen alle betrachteten Index Strukturen, sehr hohe Performanceverbesserung, da direkte Parallelisierung
+		-> Hängt stark von der SIMD Bandbreite ab und den verwendeten Datentypen
+	- Minimized key size:
+		-> Je kleiner die verwendeten Schlüssel, desto mehr können gleichzeitig verglichen werden
+		-> Im Präfixbaum können die Schlüssel klein gehalten werden, ART und Seg-Trie machen das soll
+		-> VAST nutzt komprimierung, dadurch deutliche Performanceverbesserung
+	- Adapted node size and types
+		-> Anzahl Schlüssel wie in Seg-Tree und ART anpassen, Blocking in FAST und VAST
+		-> Führt nicht direkt zu Performanceverbesserung, bildet aber die Grundlage für andere Techniken
+	- Decreased branch misses
+		-> Problem: Prefetching, Prozessor rät Weg eines if-then Wegs im voraus
+		-> FAST und VAST vermeiden if-then abfragen,
+		-> Somit weniger branch misses und bessere Performance
+	- Full use of cache line using blocking and alignment
+		-> FAST und VAST direkt darauf angepasst
+		-> Weniger Cache misses führt zu besserer Performance
+	- Usage of Compression:
+		-> Pfadkompression in Präfixbäumen standard
+		-> Schlüsselkomprimierung in VAST
+		-> Führt zu mehr Schlüsseln, die gleichzeitig verglichen werden können
+	- Adapt search algorithm:
+		-> Mit k-ärer Suche Aufwand von log_n zu logk_n reduziert
+		-> Kann bei ausreichend großen Knoten zu guten Verbesserungen führen
+	
+	- Soweit zur Evaluation, zum Schluss noch die Conclusion
+
+- Conclusion:
+	- Was sollt ihr aus diesem Vortrag mitnehmen:
+	- Zwecks schnell wachsender Technologie und schnell wachsenden Datenmengen müssen auch die Index Strukturen angepasst werden
+	- Wie macht man das am besten:
+		-> Mittels SIMD so viele Schlüssel wie möglich vergleichen, da direkte Performanceverbesserung
+		-> Effiziente Nutzung der cache line, um cache misses zu vermeiden
+		-> Branch misses vermeiden
+		-> Und wenn möglich Kompression oder bessere Suchverfahren anwenden
+	- Quellen und Vielen Dank für Aufmerksamkeit
