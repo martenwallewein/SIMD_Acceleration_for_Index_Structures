@@ -1,8 +1,8 @@
 
 	 Auf der Motivationsfolie sollte herauskommen, was deine Research Questions bei diesem Survey ist (und, dass es überhaupt ein Survey ist ^^)
-	 Horizontal vs. Vertical sehe ich hier vorne nicht im Fokus. Sollte eher nach hinten
+	x Horizontal vs. Vertical sehe ich hier vorne nicht im Fokus. Sollte eher nach hinten
 	x Adapted Index Structures -> Surveyed Index Structures
-	 Bitte auf den Folien der Verfahren (und evtl. der Übersichtsfolie) die Autoren und Konferenzen dazu in dem Zitierstil: [Broneske et al. ICDE’17] (in kleinerer Schriftgröße, evtl. In grau) 
+	x Bitte auf den Folien der Verfahren (und evtl. der Übersichtsfolie) die Autoren und Konferenzen dazu in dem Zitierstil: [Broneske et al. ICDE’17] (in kleinerer Schriftgröße, evtl. In grau) 
 	x Folie 11 sollte konsistenter Weise ein Bild des ART-Tree rauf. Ich hab dir mal eins angehangen.
  	x Ich würde auf Folie 12 erstmal die einzelnen Keywords der Kriterien einführen und dann eine Folie später die Tabelle zeigen
 	x Die Tabelle ist übrigens recht blurry. Ich hab sie dir mal als PDF angehangen

@@ -1,6 +1,6 @@
 \beamer@sectionintoc {2}{Motivation}{3}{0}{1}
 \beamer@sectionintoc {3}{SIMD Style Processing}{4}{0}{2}
-\beamer@sectionintoc {4}{Adapted Index Structures}{5}{0}{3}
+\beamer@sectionintoc {4}{Surveyed Index Structures}{5}{0}{3}
 \beamer@subsectionintoc {4}{1}{Elf}{6}{0}{3}
 \beamer@subsectionintoc {4}{2}{Seg-Tree/Trie}{7}{0}{3}
 \beamer@subsectionintoc {4}{3}{FAST}{8}{0}{3}

@@ -29,8 +29,12 @@
 \begin{frame}
 \frametitle{Motivation}
 	\begin{center}
-		\includegraphics[width=0.73\textwidth]{img/big_picture.png}
+		\includegraphics[width=0.75\textwidth]{img/big_picture.pdf}
 	\end{center}
+	\begin{itemize}
+		\item What are state-of-the-art index structures?
+		\item Which optimizations do they have in common?
+	\end{itemize}
 \end{frame}
 
 %\section{B$^{+}$- and Radix-Trees}
@@ -93,7 +97,7 @@
 %	\end{itemize}
 %\end{itemize}
 %\end{frame}
-\section{Adapted Index Structures}
+\section{Surveyed Index Structures}
 
 \begin{frame}
 \frametitle{Surveyed Index Structures}
@@ -144,7 +148,7 @@
 \begin{frame}
 	\frametitle{Fast Architecture Sensitive Tree}
 	\begin{center}
-		\includegraphics[width=0.45\textwidth]{img/fast2.png}
+		\includegraphics[width=0.5\textwidth]{img/fast.pdf}
 	\end{center}
 	\begin{itemize}
 		\item Based on binary tree
@@ -168,7 +172,7 @@
 			\item Lossy compression for inner nodes
 			\item Lossfree compression for child nodes
 		\end{itemize}
-		\item  Decompression and error correction of lossy compression has less impact compared to the performance increase with horizontal vectorisation 
+		\item  Decompression and error correction of lossy compression has less impact compared to the performance increase with SIMD
 	\end{itemize}
 	\vspace*{\fill}
 	\begin{center}
