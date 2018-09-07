@@ -8,10 +8,10 @@
 \usepackage{pdfpages}
 
 
-\title{SIMD Acceleration for Index Structures}
+\title{SIMD Acceleration for Index Structures: A Survey}
 \author{Marten Wallewein-Eising}
 \date{\today}
-\institute{Otto von Guericke Univerity, Magdeburg}
+\institute{Otto von Guericke University, Magdeburg}
 
 \begin{document}
 
@@ -74,29 +74,29 @@
 	in b.
 \end{itemize}
 \end{frame}
-\begin{frame}
-\frametitle{Horizontal Vectorization}
+%\begin{frame}
+%\frametitle{Horizontal Vectorization}
 %\begin{center}
 %	\includegraphics[width=0.6\textwidth]{img/horizontal_vectorization.png}
 %\end{center}
-\begin{itemize}
-	\item Using SIMD-instructions to compare data items in parallel
-	\item Compare one search key to multiple keys of the index structure
-	\begin{itemize}
-		\item Search key has to be duplicated
-		\item Often all keys of a node are compared against one search key
-	\end{itemize}
-	\vspace*{0.5cm}
-	\item Opposite: Vertical Vectorization
-	\begin{itemize}
-		\item Not useful, since sequential search key storage in main memory is needed
-	\end{itemize}
-\end{itemize}
-\end{frame}
+%\begin{itemize}
+%	\item Using SIMD-instructions to compare data items in parallel
+%	\item Compare one search key to multiple keys of the index structure
+%	\begin{itemize}
+%		\item Search key has to be duplicated
+%		\item Often all keys of a node are compared against one search key
+%	\end{itemize}
+%	\vspace*{0.5cm}
+%	\item Opposite: Vertical Vectorization
+%	\begin{itemize}
+%		\item Not useful, since sequential search key storage in main memory is needed
+%	\end{itemize}
+%\end{itemize}
+%\end{frame}
 \section{Adapted Index Structures}
 
 \begin{frame}
-\frametitle{Adapted Index Structures}
+\frametitle{Surveyed Index Structures}
 \begin{itemize}
 	\item Elf
 	\item Seg-Tree/Trie
@@ -110,39 +110,50 @@
 \begin{frame}
 	\frametitle{Elf}
 	\begin{center}
-		\includegraphics[width=0.8\textwidth]{img/elf.pdf}
+		\includegraphics[width=0.65\textwidth]{img/elf.pdf}
 	\end{center}
 	\begin{itemize}
 		\item Multi-dimensional index structure for column-wise storage
 		\item Prefix-redundancy elimination on distinct column values
 		\item Linearisation for optimized memory layout
 	\end{itemize}
+	\begin{center}
+		\tiny [Broneske et al. ICDE’17]
+	\end{center}
 \end{frame}
 
 \subsection{Seg-Tree/Trie}
 \begin{frame}
-\frametitle{Seg-Tree/Trie}
-\begin{center}
-	\includegraphics[width=1.0\textwidth]{img/SegTree.pdf}
-\end{center}
-\begin{itemize}
-	\item Each node is a k-ary search tree
-	\item Each node is linearised to use k-ary search
-	\item $k = \frac{\vert SIMD \vert }{\vert Key \vert}$, k keys are compared in parallel
-	%\item Each node is a k-ary search tree
-\end{itemize}
+	\frametitle{Seg-Tree/Trie}
+	\begin{center}
+		\includegraphics[width=1.0\textwidth]{img/SegTree.pdf}
+	\end{center}
+	\begin{itemize}
+		\item Each node is a k-ary search tree
+		\item Each node is linearised to use k-ary search
+		\item $k = \frac{\vert SIMD \vert }{\vert Key \vert}$, k keys are compared in parallel
+		%\item Each node is a k-ary search tree
+	\end{itemize}
+	\vspace*{\fill}
+	\begin{center}
+		\tiny [Zeuch et al. EDBT’14]
+	\end{center}
 \end{frame}
+
 \subsection{FAST}
 \begin{frame}
-\frametitle{Fast Architecture Sensitive Tree}
-\begin{center}
-	\includegraphics[width=0.55\textwidth]{img/fast2.png}
-\end{center}
-\begin{itemize}
-	\item Based on binary tree
-	\item Hierarchical blocking: SIMD, cache line and page blocks
-	\item Efficient register, cache line and page usage
-\end{itemize}
+	\frametitle{Fast Architecture Sensitive Tree}
+	\begin{center}
+		\includegraphics[width=0.45\textwidth]{img/fast2.png}
+	\end{center}
+	\begin{itemize}
+		\item Based on binary tree
+		\item Hierarchical blocking: SIMD, cache line and page blocks
+		\item Efficient register, cache line and page usage
+	\end{itemize}
+	\begin{center}
+		\tiny [Kim et al. SIGMOD’10]
+	\end{center}
 \end{frame}
 
 \subsection{VAST}
@@ -159,29 +170,50 @@
 		\end{itemize}
 		\item  Decompression and error correction of lossy compression has less impact compared to the performance increase with horizontal vectorisation 
 	\end{itemize}
+	\vspace*{\fill}
+	\begin{center}
+		\tiny [Yamamuro et al. EDBT’12]
+	\end{center}
 \end{frame}
 
 \subsection{ART}
 \begin{frame}
 	\frametitle{Adaptive Radix Tree}
-	%\begin{center}
-	%	\includegraphics[width=0.5\textwidth]{img/ART.pdf}
-	%\end{center}
+	\begin{center}
+		\includegraphics[width=0.5\textwidth]{img/art2.pdf}
+	\end{center}
 	\begin{itemize}
 		\item Uses different node types with different number of keys and children
 		\item Due to overfill or underfill of nodes, the node type is changed
-		\item Horizontal vectorization only on one node type
 		\item Reduced space consumption due to lazy evaluation and path compression
 	\end{itemize}
+	\begin{center}
+		 \tiny [Leis et al.  ICDE`13]
+	\end{center}
+
 \end{frame}
 
 \section{Evaluation}
 
 \begin{frame}
+	\frametitle{Evaluation}
+	Considered performance criteria for comparing the surveyed index structures:
+	\begin{itemize}
+		\item Horizontal Vectorization
+		\item Minimized key size
+		\item Adapted node sizes / types
+		\item Decreased branch misses
+		\item Exploit cache lines using blocking and alignment
+		\item Usage of Compression
+		\item Adapt search algorithm for linearized nodes
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
 \frametitle{Evaluation}
 Implementation of the considered performance criteria and their impact:
 \begin{figure}
-	\includegraphics[width=0.9\textwidth]{img/table.png}
+	\includegraphics[width=0.9\textwidth]{img/table.pdf}
 \end{figure}
 
 
@@ -200,6 +232,24 @@ How to adapt index structures to modern database systems:
 	\item Decrease branch misses
 	\item Use compression or/and adapted search algorithms
 	\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusion}
+How to adapt index structures to modern database systems:
+\begin{itemize}
+	\item Compare as many keys as possible in parallel with SIMD
+	\begin{itemize}
+		\item Direct performance increase up to a multiple
+	\end{itemize}
+	\item Efficient usage of cache line
+	\item Decrease branch misses
+	\item Use compression or/and adapted search algorithms
+\end{itemize}
+\vspace*{\fill}
+\begin{center}
+	\huge Thank you for your attention!
+\end{center}
 \end{frame}
 
 \begin{frame}
@@ -223,7 +273,7 @@ How to adapt index structures to modern database systems:
 \end{itemize}
 \end{frame}
 
-\begin{frame}
- \frametitle{Thank you for your attention!}
-\end{frame}
+%\begin{frame}
+% \frametitle{Thank you for your attention!}
+%\end{frame}
 \end{document}
