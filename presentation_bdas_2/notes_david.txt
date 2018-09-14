@@ -1,0 +1,17 @@
+xAlle Autoren auf erster Folie. Footer -> Wallewein-Eising et al.
+xTemplate ist angehangen
+Slide 3: 
+x	Parallelization -> SIMD
+x	Growing Cache Sizes -> Growing Caches
+Slide 5:
+x	Referenzen und eventuell ne Kategorisierung als Tabelle (musst du aber nicht)
+x	Titel: Surveyed Main-Memory Index Structures
+	Story: Elf ist unserer und wir wollen uns Sachen von anderen abgucken
+	Warum kein CSB Tree? Weil Seg Tree darauf aufbaut
+x Slide 8: Bild habe ich überarbeitet, bitte auch die Reihenfolge auf der Slide ändern
+x Slide 11: doch wieder raus :-(
+Slide 12 
+x	habe ich dir mal exemplarisch die Tabelle mit einer Animation versehen, bitte dann Schritt für Schritt auch die anderen (2. Folie im Template)
+x	Titel: Qualitative Comparison
+x	Use of Compression -> Use of compression
+x Slide 13: Multiple -> by a factor of X (where X keys fit a SIMD register)

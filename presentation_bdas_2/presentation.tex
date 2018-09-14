@@ -67,7 +67,7 @@
 \begin{frame}
 \frametitle{Motivation}
 \begin{center}
-\includegraphics[width=0.75\textwidth]{img/big_picture.pdf}
+\includegraphics[width=0.75\textwidth]{img/big_picture_new.pdf}
 \end{center}
 \begin{itemize}[label=\textbullet,leftmargin=1em]
 \item What are state-of-the-art index structures?
@@ -75,36 +75,6 @@
 \end{itemize}
 \end{frame}
 
-%\section{B$^{+}$- and Radix-Trees}
-%\section{Excursion: B$^{+}$-Tree} 
-%\begin{frame}
-%\frametitle{Excursion: B$^{+}$-Tree}
-%\begin{center}%
-%	\includegraphics[width=0.5\textwidth]{img/forest.png}
-%\end{center}
-%\end{frame}
-%\begin{frame}
-%\frametitle{B$^{+}$-Tree}
-%	\begin{center}
-%		\includegraphics[width=0.6\textwidth]{img/bplus_tree.png}
-%	\end{center}
-%	\begin{itemize}
-%		\item N-ary tree with often a large number of children per node
-%		\item Only leaf nodes contain keys
-%		\item Leaf nodes often linked for range based scans
-%	\end{itemize}
-%\end{frame}
-%\begin{frame}
-%\frametitle{Radix-Tree}
-%	\begin{center}
-%	\includegraphics[width=0.6\textwidth]{img/radix_tree.png}
-%	\end{center}
-%	\begin{itemize}
-%		\item Space optimized prefix tree
-%		\item Number of children of every inner node is at least the radix $r$
-%		\item Each node that is the only child is merged with its parent
-%	\end{itemize}
-%\end{frame}
 \section{SIMD Style Processing}
 \begin{frame}
 \frametitle{Single Instruction Multiple Data}
@@ -139,13 +109,41 @@ in b.
 
 \begin{frame}
 \frametitle{Surveyed Main-Memory Index Structures}
-\begin{itemize}[label=\textbullet,leftmargin=1em]
-\item Elf \begin{tiny}[Broneske et al. ICDE’17]\end{tiny} 
-\item Seg-Tree/Trie \begin{tiny} [Zeuch et al. EDBT’14]\end{tiny} 
-\item FAST: Fast Architecture Sensitive Tree \begin{tiny} [Kim et al. SIGMOD’10]\end{tiny} 
-\item VAST: Vector-Advanced and Compressed Structure Tree \begin{tiny}[Yamamuro et al. EDBT’12]\end{tiny} 
-\item ART: Adaptive Radix Tree \begin{tiny}[Leis et al.  ICDE`13]\end{tiny} 
-\end{itemize}
+\footnotesize
+	\begin{tabular}{l|l|l}%{{l|p{1.0cm}|p{0.8cm}|p{0.7cm}|p{0.8cm}|p{0.5cm}|p{0.8cm}} \hline
+		\hline
+		%\multirow{2}{*}{\textbf{Criterion}}&\textbf{Seg-Tree/}&\multirow{2}{*}{\textbf{FAST}}&\multirow{2}{*}{\textbf{ART}}&\multirow{2}{*}{\textbf{VAST}}&\multirow{2}{*}{\textbf{Elf}}&\multirow{2}{*}{\textbf{Impact}}\\
+		%&\textbf{Trie}&&&&&\\
+		\textbf{Index Structure} & \textbf{Based on} & \textbf{Reference} \\
+		\hline
+		Elf & Prefix Tree & [Broneske et al. ICDE’17] \\[.2cm]
+	    Seg-Tree/Trie & CSB-Tree & [Zeuch et al. EDBT’14] \\[.2cm]
+	    FAST: Fast Architecture & \multirow{2}{*}{Binary Tree} &  \multirow{2}{*}{[Kim et al. SIGMOD’10]} \\
+	    Sensitive Tree  &&\\[.2cm] 
+	    VAST: Vector-Advanced and  & \multirow{2}{*}{Binary Tree} &  \multirow{2}{*}{[Yamamuro et al. EDBT’12]} \\
+	    Compressed Structure Tree  &&\\[.2cm] 
+	    ART: Adaptive Radix Tree  & Radix Tree & [Leis et al.  ICDE`13] \\[.1cm]
+		%\multicolumn{7}{|c|}{Legend: x = implements the issue; o = partially implements the issue;}\\
+		%\multicolumn{7}{|c|}{ - = does not implement the issue}\\  \hline 
+		%Processing Device& Pipeline\newline Parallelism& Data \newline Parallelism & Memory \newline Capacity & Memory \newline Bandwidth\\ \hline
+		%\only<1>{CPU& & & & \\ \hline}
+		%\only<2->{CPU& + / + + & +  & + +  &  +\\ \hline}
+		%\only<1-2>{APU& &   &  &  \\\hline}
+		%\only<3->{APU& + / + + & +   & +  + &  + \\\hline}
+		%MIC& + / + + & + / + + &  + & + + \\ \hline
+		%GPU& --  &  + / + +  & + & + +\\ \hline
+		%FPGA& + + & -- / +  & -- / + & + +\\
+		%\multicolumn{2}{|c|}{Legend: x = implements the issue; o = partially implements the issue;}\\
+		%\multicolumn{2}{|c|}{ - = does not implement the issue}\\
+	\end{tabular}
+	
+%\begin{itemize}[label=\textbullet,leftmargin=1em]
+%\item Elf \begin{tiny}[Broneske et al. ICDE’17]\end{tiny} 
+%\item Seg-Tree/Trie \begin{tiny} [Zeuch et al. EDBT’14]\end{tiny} 
+%\item FAST: Fast Architecture Sensitive Tree \begin{tiny} [Kim et al. SIGMOD’10]\end{tiny} 
+%\item VAST: Vector-Advanced and Compressed Structure Tree \begin{tiny}[Yamamuro et al. EDBT’12]\end{tiny} 
+%\item ART: Adaptive Radix Tree \begin{tiny}[Leis et al.  ICDE`13]\end{tiny} 
+%\end{itemize}
 \end{frame}
 
 \subsection{Elf}
