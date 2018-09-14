@@ -135,7 +135,7 @@
 	\begin{itemize}
 		\item Each node is a k-ary search tree
 		\item Each node is linearised to use k-ary search
-		\item $k = \frac{\vert SIMD \vert }{\vert Key \vert}$, k keys are compared in parallel
+		\item $k = \frac{\vert SIMD \vert }{\vert Key \vert}$ partitions, $k-1$ separator keys are compared in parallel
 		%\item Each node is a k-ary search tree
 	\end{itemize}
 	\vspace*{\fill}
@@ -167,10 +167,10 @@
 		\item Extension of FAST
 		%\item Same hierarchical blocking
 		\item Decrease branch misses avoiding conditional branches
-		\item Uses key compression on lower levels of the tree
+		\item Uses key compression
 		\begin{itemize}
 			\item Lossy compression for inner nodes
-			\item Lossfree compression for child nodes
+			\item Lossfree compression leaf nodes
 		\end{itemize}
 		\item  Decompression and error correction of lossy compression has less impact compared to the performance increase with SIMD
 	\end{itemize}
@@ -189,7 +189,7 @@
 	\begin{itemize}
 		\item Uses different node types with different number of keys and children
 		\item Due to overfill or underfill of nodes, the node type is changed
-		\item Reduced space consumption due to lazy evaluation and path compression
+		\item Reduced space consumption due to lazy expansion and path compression
 	\end{itemize}
 	\begin{center}
 		 \tiny [Leis et al.  ICDE`13]
