@@ -47,7 +47,7 @@
 \subtitle{Beyond Databases Architectures and Structures}
 \author[Wallewein-Eising et al.]{\textbf{Marten Wallewein-Eising}, Gunter Saake, David Broneske}
 \date{September 18, 2018}
-\institute{University of Magdeburg}
+\institute{University of Magdeburg, Germany}
 
 \begin{document}
 
@@ -70,7 +70,7 @@
 \includegraphics[width=0.75\textwidth]{img/big_picture_new.pdf}
 \end{center}
 \begin{itemize}[label=\textbullet,leftmargin=1em]
-\item What are state-of-the-art index structures?
+\item What are state-of-the-art main-memory index structures?
 \item Which optimizations do they have in common?
 \end{itemize}
 \end{frame}
@@ -82,8 +82,7 @@
 \includegraphics[width=0.7\textwidth]{img/simd.pdf}
 \end{center}
 \begin{itemize}[label=\textbullet,leftmargin=1em]
-\item \textbf{\_\_m128i \_mm\_add\_epi32 (\_\_m128i a, \_\_m128i b)} Adds  4 signed 32-bit integers in a to 4 signed 32-bit integers
-in b.
+\item \textbf{\_\_m128i \_mm\_add\_epi32 (\_\_m128i a, \_\_m128i b)} Adds  4 signed 32-bit integers in \textbf{a} to 4 signed 32-bit integers in \textbf{b}.
 \end{itemize}
 \end{frame}
 %\begin{frame}
@@ -116,13 +115,13 @@ in b.
 		%&\textbf{Trie}&&&&&\\
 		\textbf{Index Structure} & \textbf{Based on} & \textbf{Reference} \\
 		\hline
-		Elf & Prefix Tree & [Broneske et al. ICDE’17] \\[.2cm]
-	    Seg-Tree/Trie & CSB-Tree & [Zeuch et al. EDBT’14] \\[.2cm]
-	    FAST: Fast Architecture & \multirow{2}{*}{Binary Tree} &  \multirow{2}{*}{[Kim et al. SIGMOD’10]} \\
+		Elf & Prefix Tree & [Broneske et al. ICDE’17] \nocite{BKS+17} \\[.2cm]
+	    Seg-Tree/Trie & CSB-Tree & [Zeuch et al. EDBT’14] \nocite{zeuch2014adapting} \\[.2cm]
+	    FAST: Fast Architecture & \multirow{2}{*}{Binary Tree} &  \multirow{2}{*}{[Kim et al. SIGMOD’10]} \nocite{kim2010fast} \\
 	    Sensitive Tree  &&\\[.2cm] 
-	    VAST: Vector-Advanced and  & \multirow{2}{*}{Binary Tree} &  \multirow{2}{*}{[Yamamuro et al. EDBT’12]} \\
+	    VAST: Vector-Advanced and  & \multirow{2}{*}{Binary Tree} &  \multirow{2}{*}{[Yamamuro et al. EDBT’12]} \nocite{yamamuro2012vast} \\
 	    Compressed Structure Tree  &&\\[.2cm] 
-	    ART: Adaptive Radix Tree  & Radix Tree & [Leis et al.  ICDE`13] \\[.1cm]
+	    ART: Adaptive Radix Tree  & Radix Tree & [Leis et al.  ICDE`13] \nocite{leis2013adaptive} \\[.1cm]
 		%\multicolumn{7}{|c|}{Legend: x = implements the issue; o = partially implements the issue;}\\
 		%\multicolumn{7}{|c|}{ - = does not implement the issue}\\  \hline 
 		%Processing Device& Pipeline\newline Parallelism& Data \newline Parallelism & Memory \newline Capacity & Memory \newline Bandwidth\\ \hline
@@ -171,7 +170,7 @@ in b.
 \begin{itemize}[label=\textbullet,leftmargin=1em]
 \item Each node is a k-ary search tree
 \item Each node is linearised to use k-ary search
-\item $k = \frac{\vert SIMD \vert }{\vert Key \vert}$ partitions, $k-1$ separator keys are compared in parallel
+\item $k = \frac{\vert SIMD \vert }{\vert Key \vert} + 1$ partitions, $k-1$ separator keys are compared in parallel
 %\item Each node is a k-ary search tree
 \end{itemize}
 \vspace*{\fill}
@@ -539,8 +538,9 @@ How to adapt index structures to modern database systems:
 
 
 \begin{frame}[noframenumbering,allowframebreaks]
+\frametitle{References}
 \bibliographystyle{apalike}
-\bibliography{sigproc}
+\bibliography{presentation}
 \end{frame}
 
 

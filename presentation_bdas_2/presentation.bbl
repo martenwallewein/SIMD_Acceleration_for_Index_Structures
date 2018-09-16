@@ -1,3 +1,37 @@
 \begin{thebibliography}{}
 
+\bibitem[Broneske et~al., 2017]{BKS+17}
+Broneske, D., K{\"o}ppen, V., Saake, G., and Sch{\"a}ler, M. (2017).
+\newblock Accelerating multi-column selection predicates in main-memory - the
+  {Elf} approach.
+\newblock In {\em Proceedings of the International Conference on Data
+  Engineering (ICDE)}, pages 647--658. IEEE.
+
+\bibitem[Kim et~al., 2010]{kim2010fast}
+Kim, C., Chhugani, J., Satish, N., Sedlar, E., Nguyen, A.~D., Kaldewey, T.,
+  Lee, V.~W., Brandt, S.~A., and Dubey, P. (2010).
+\newblock Fast: Fast architecture sensitive tree search on modern {CPUs} and
+  {GPUs}.
+\newblock In {\em Proceedings of the International Conference on Management of
+  Data (SIGMOD)}, pages 339--350. ACM.
+
+\bibitem[Leis et~al., 2013]{leis2013adaptive}
+Leis, V., Kemper, A., and Neumann, T. (2013).
+\newblock The adaptive radix tree: Artful indexing for main-memory databases.
+\newblock In {\em Proceedings of the International Conference on Data
+  Engineering (ICDE)}, pages 38--49. IEEE.
+
+\bibitem[Yamamuro et~al., 2012]{yamamuro2012vast}
+Yamamuro, T., Onizuka, M., Hitaka, T., and Yamamuro, M. (2012).
+\newblock Vast-tree: A vector-advanced and compressed structure for massive
+  data tree traversal.
+\newblock In {\em Proceedings of the International Conference on Extending
+  Database Technology (EDBT)}, pages 396--407. ACM.
+
+\bibitem[Zeuch et~al., 2014]{zeuch2014adapting}
+Zeuch, S., Huber, F., and Freytag, J.-c. (2014).
+\newblock Adapting tree structures for processing with simd instructions.
+\newblock In {\em Proceedings of the International Conference on Extending
+  Database Technology (EDBT)}. Citeseer.
+
 \end{thebibliography}
